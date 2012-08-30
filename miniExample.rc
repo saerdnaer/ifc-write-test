@@ -1,0 +1,278 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\miniExample.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\miniExample.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About miniExample"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "miniExample Version 1.0",IDC_STATIC,40,10,119,8,
+                    SS_NOPREFIX
+    LTEXT           "Copyright (C) 2008",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+END
+
+IDD_MINIEXAMPLE_DIALOG DIALOGEX 0, 0, 340, 401
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "miniExample"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Create IFC File (SPFF)",IDC_IFC,7,380,155,14
+    EDITTEXT        IDC_EDIT_FILE_NAME,73,7,259,12,ES_AUTOHSCROLL
+    LTEXT           "File Name",IDC_STATIC,7,7,41,12
+    LTEXT           "Schema Name",IDC_STATIC,7,22,64,12
+    EDITTEXT        IDC_EDIT_SCHEMA_NAME,73,23,259,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_WALL_THICKNESS,242,80,62,12,ES_AUTOHSCROLL
+    LTEXT           "Wall Thickness",IDC_STATIC_00,167,81,64,9
+    LTEXT           "mm",IDC_STATIC_01,312,81,20,9
+    EDITTEXT        IDC_EDIT_WALL_HEIGHT,242,94,62,12,ES_AUTOHSCROLL
+    LTEXT           "Wall Height",IDC_STATIC_10,167,94,64,9
+    LTEXT           "mm",IDC_STATIC_11,312,94,20,9
+    EDITTEXT        IDC_EDIT_WALL_WIDTH,242,107,62,12,ES_AUTOHSCROLL
+    LTEXT           "Wall Width",IDC_STATIC_20,167,108,64,9
+    LTEXT           "mm",IDC_STATIC_21,312,107,20,9
+    EDITTEXT        IDC_EDIT_OPENING_X_OFFSET,242,120,62,12,ES_AUTOHSCROLL
+    LTEXT           "Opening X Offset",IDC_STATIC_30,167,121,64,9
+    LTEXT           "mm",IDC_STATIC_31,312,121,20,9
+    CONTROL         "Opening",IDC_CHECK_OPENING,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,13,175,112,11
+    CONTROL         "Window",IDC_CHECK_WINDOW,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,13,281,124,11
+    CONTROL         "Opening (Extruded Polygon)",IDC_RADIO_1_1,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,25,216,104,10
+    CONTROL         "Opening (B-Rep)",IDC_RADIO_1_2,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,25,229,69,10
+    CONTROL         "Wall",IDC_CHECK_WALL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,13,80,126,10
+    CONTROL         "Wall (Extruded Polygon)",IDC_RADIO_0_1,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,24,118,124,11
+    CONTROL         "Wall (B-Rep)",IDC_RADIO_0_2,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,24,131,124,11
+    CONTROL         "Window (Extruded Polygon)",IDC_RADIO_2_1,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,25,323,103,10
+    CONTROL         "Window (B-Rep)",IDC_RADIO_2_2,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,25,335,68,10
+    LTEXT           "Body representation:",IDC_STATIC_0_0,24,106,94,8
+    LTEXT           "Box representation:",IDC_STATIC_0_1,24,144,94,8
+    CONTROL         "Wall (Bounding Box)",IDC_CHECK_WALL_BASICREPR,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,24,155,110,11
+    LTEXT           "Body representation:",IDC_STATIC_1_0,25,204,94,8
+    LTEXT           "Box representation:",IDC_STATIC_1_1,25,242,94,8
+    CONTROL         "Opening (Bounding Box)",IDC_CHECK_OPENING_BASICREPR,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,253,136,12
+    LTEXT           "Body representation:",IDC_STATIC_2_0,25,310,94,8
+    LTEXT           "Box representation:",IDC_STATIC_2_1,25,347,94,8
+    CONTROL         "Window (Bounding Box)",IDC_CHECK_WINDOW_BASICREPR,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,359,119,8
+    EDITTEXT        IDC_EDIT_OPENING_Y_OFFSET,242,134,62,12,ES_AUTOHSCROLL
+    LTEXT           "Opening Z Offset",IDC_STATIC_40,167,134,64,9
+    LTEXT           "mm",IDC_STATIC_41,312,134,20,9
+    EDITTEXT        IDC_EDIT_OPENING_HEIGHT,242,147,62,12,ES_AUTOHSCROLL
+    LTEXT           "Opening Height",IDC_STATIC_50,167,147,64,9
+    LTEXT           "mm",IDC_STATIC_51,312,147,20,9
+    EDITTEXT        IDC_EDIT_OPENING_WIDTH,242,160,62,12,ES_AUTOHSCROLL
+    LTEXT           "Opening Width",IDC_STATIC_60,167,160,64,9
+    LTEXT           "mm",IDC_STATIC_61,312,161,20,9
+    EDITTEXT        IDC_EDIT_WINDOW_THICKNESS,242,174,62,12,ES_AUTOHSCROLL
+    LTEXT           "Window Thickness",IDC_STATIC_70,167,174,64,9
+    LTEXT           "mm",IDC_STATIC_71,312,174,20,9
+    EDITTEXT        IDC_EDIT_WINDOW_HEIGHT,242,188,62,12,ES_AUTOHSCROLL
+    LTEXT           "Window to Opening Y Offset",IDC_STATIC_80,167,189,64,18
+    LTEXT           "mm",IDC_STATIC_81,312,189,20,9
+    EDITTEXT        IDC_EDIT_0_NAME,55,92,95,12,ES_AUTOHSCROLL
+    LTEXT           "Name",IDC_STATIC_0_NAME,24,93,27,9
+    EDITTEXT        IDC_EDIT_1_NAME,56,189,95,12,ES_AUTOHSCROLL
+    LTEXT           "Name",IDC_STATIC_1_NAME,25,190,27,9
+    EDITTEXT        IDC_EDIT_2_NAME,56,295,95,12,ES_AUTOHSCROLL
+    LTEXT           "Name",IDC_STATIC_2_NAME,25,296,27,9
+    PUSHBUTTON      "Create IFX File (ifcXML, .ifc=>.ifcxml)",IDC_IFX,177,
+                    380,155,14
+    GROUPBOX        "IFC File Content",IDC_STATIC,7,68,325,305
+    CONTROL         "Coordination View",IDC_RADIO_VIEW_0,"Button",
+                    BS_AUTORADIOBUTTON,7,41,325,11
+    CONTROL         "Presentation View",IDC_RADIO_VIEW_1,"Button",
+                    BS_AUTORADIOBUTTON,7,53,73,10
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "miniExample MFC Application\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "miniExample\0"
+            VALUE "LegalCopyright", "Copyright (C) 2008\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "miniExample.EXE\0"
+            VALUE "ProductName", "miniExample Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_MINIEXAMPLE_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 332
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 394
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About miniExample..."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\miniExample.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

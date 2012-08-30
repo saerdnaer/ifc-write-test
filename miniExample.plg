@@ -1,0 +1,119 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: miniExample - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Release/miniExample.res" /d "NDEBUG" /d "_AFXDLL" "C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\miniExample.rc"" 
+Creating temporary file "C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1DB.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/miniExample.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\baseIfc.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\baseIfcObject.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\boundingBoxIfc.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\BRepIfc.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\extrudedPolygonIfc.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\miniExample.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\miniExampleDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1DB.tmp" 
+Creating temporary file "C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1DC.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/miniExample.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1DC.tmp" 
+Creating temporary file "C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1DD.tmp" with contents
+[
+IFCEngine.lib /nologo /subsystem:windows /incremental:no /pdb:"Release/miniExample.pdb" /machine:I386 /out:"Release/miniExample.exe" 
+".\Release\baseIfc.obj"
+".\Release\baseIfcObject.obj"
+".\Release\boundingBoxIfc.obj"
+".\Release\BRepIfc.obj"
+".\Release\extrudedPolygonIfc.obj"
+".\Release\miniExample.obj"
+".\Release\miniExampleDlg.obj"
+".\Release\StdAfx.obj"
+".\Release\miniExample.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1DD.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+baseIfc.cpp
+baseIfcObject.cpp
+boundingBoxIfc.cpp
+BRepIfc.cpp
+extrudedPolygonIfc.cpp
+miniExample.cpp
+miniExampleDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+miniExample.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: miniExample - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Debug/miniExample.res" /d "_DEBUG" /d "_AFXDLL" "C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\miniExample.rc"" 
+Creating temporary file "C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1DF.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/miniExample.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\baseIfc.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\baseIfcObject.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\boundingBoxIfc.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\BRepIfc.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\extrudedPolygonIfc.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\miniExample.cpp"
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\miniExampleDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1DF.tmp" 
+Creating temporary file "C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1E0.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/miniExample.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Documents and Settings\bapa\Desktop\IFCEngineDLLv1.02\VisualC\miniExample\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1E0.tmp" 
+Creating temporary file "C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1E1.tmp" with contents
+[
+IFCEngine.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/miniExample.pdb" /debug /machine:I386 /out:"Debug/miniExample.exe" /pdbtype:sept 
+".\Debug\baseIfc.obj"
+".\Debug\baseIfcObject.obj"
+".\Debug\boundingBoxIfc.obj"
+".\Debug\BRepIfc.obj"
+".\Debug\extrudedPolygonIfc.obj"
+".\Debug\miniExample.obj"
+".\Debug\miniExampleDlg.obj"
+".\Debug\StdAfx.obj"
+".\Debug\miniExample.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\bapa\LOCALS~1\Temp\RSP1E1.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+baseIfc.cpp
+baseIfcObject.cpp
+boundingBoxIfc.cpp
+BRepIfc.cpp
+extrudedPolygonIfc.cpp
+miniExample.cpp
+miniExampleDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+miniExample.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
