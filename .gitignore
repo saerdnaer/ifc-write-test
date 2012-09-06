@@ -8,3 +8,4 @@ Debug/
 *.opensdf
 *.vcxproj.filters
 *.sdf
+Release*
