@@ -472,104 +472,37 @@ void CMiniExampleDlg::OnOK()
         objectsWillBeAdded = false;
     }
 
-    if  (createEmptyIfcFile(ifcSchemaName, objectsWillBeAdded)) {
-        if  ( (m_Wall.IsWindowEnabled())  &&
-              (m_Wall.GetCheck()) ) {
+    if  (createEmptyIfcFile(ifcSchemaName, objectsWillBeAdded)) 
+	{
+        switch  (GetCheckedRadioButton(IDC_RADIO_0_1, IDC_RADIO_0_2)) {
+            case  IDC_RADIO_0_1:
+                ifcWallInstance = createIfcWallStandardCase(wallName, 0, 0, 0);
 
-            switch  (GetCheckedRadioButton(IDC_RADIO_0_1, IDC_RADIO_0_2)) {
-                case  IDC_RADIO_0_1:
-                    ifcWallInstance = createIfcWallStandardCase(wallName, 0, 0, 0);
+                buildRelAssociatesMaterial(ifcWallInstance, wallThickness);
+                createIfcPolylineShape(0, wallThickness/2, wallWidth, wallThickness/2);
 
-                    buildRelAssociatesMaterial(ifcWallInstance, wallThickness);
-                    createIfcPolylineShape(0, wallThickness/2, wallWidth, wallThickness/2);
+                pPolygon = localCreatePolygonStructureForSquare(0, 0, wallWidth, wallThickness);
+                createIfcExtrudedPolygonShape(pPolygon, wallHeight);
+                break;
+            case  IDC_RADIO_0_2:
+                ifcWallInstance = createIfcWall(wallName, 0, 0, 0);
 
-                    pPolygon = localCreatePolygonStructureForSquare(0, 0, wallWidth, wallThickness);
-                    createIfcExtrudedPolygonShape(pPolygon, wallHeight);
-                    break;
-                case  IDC_RADIO_0_2:
-                    ifcWallInstance = createIfcWall(wallName, 0, 0, 0);
-
-                    if  ( (view == PRESENTATIONVIEW)  &&  (m_Opening.IsWindowEnabled()) ) {
-                        pShell = localCreateShellStructureForCuboidWithOpening(0, 0, 0, wallWidth, wallThickness, wallHeight, openingXOffset, openingZOffset, openingXOffset + openingWidth, openingZOffset + openingHeight);
-                    } else {
-                        pShell = localCreateShellStructureForCuboid(0, 0, 0, wallWidth, wallThickness, wallHeight);
-                    }
-                    createIfcBRepShape(pShell);
-                    break;
-                default:
-                    MessageBox("Unknown selected type");
-                    break;
-            }
-
-            if  (m_WallBasicRepr.GetCheck()) {
-                createIfcBoundingBoxShape(wallWidth, wallThickness, wallHeight, "Box");
-            }
-        }
-
-        if  ( (m_Opening.IsWindowEnabled())  &&
-              (m_Opening.GetCheck()) ) {
-            ifcOpeningElementInstance = createIfcOpeningElement(openingName, openingXOffset, 0, openingZOffset);
-
-            //
-            //      Build relation between Wall and Opening
-            //
-            buildRelVoidsElementInstance(ifcWallInstance, ifcOpeningElementInstance);
-
-            if  (view == COORDINATIONVIEW) {
-                switch  (GetCheckedRadioButton(IDC_RADIO_0_1, IDC_RADIO_0_2)) {
-                    case  IDC_RADIO_0_1:
-                        pPolygon = localCreatePolygonStructureForSquare(0, 0, openingWidth, wallThickness);
-                        createIfcExtrudedPolygonShape(pPolygon, openingHeight);
-                        break;
-                    case  IDC_RADIO_0_2:
-                        pShell = localCreateShellStructureForCuboid(0, 0, 0, openingWidth, wallThickness, openingHeight);
-                        createIfcBRepShape(pShell);
-                        break;
-                    default:
-                        MessageBox("Unknown selected type");
-                        break;
+                if  ( (view == PRESENTATIONVIEW)  &&  (m_Opening.IsWindowEnabled()) ) {
+                    pShell = localCreateShellStructureForCuboidWithOpening(0, 0, 0, wallWidth, wallThickness, wallHeight, openingXOffset, openingZOffset, openingXOffset + openingWidth, openingZOffset + openingHeight);
+                } else {
+                    pShell = localCreateShellStructureForCuboid(0, 0, 0, wallWidth, wallThickness, wallHeight);
                 }
+                createIfcBRepShape(pShell);
+                break;
+            default:
+                MessageBox("Unknown selected type");
+                break;
+		}
 
-                if  (m_OpeningBasicRepr.GetCheck()) {
-                    createIfcBoundingBoxShape(openingWidth, wallThickness, openingHeight, "Box");
-                }
-            } else {
-                ASSERT(view == PRESENTATIONVIEW);
-            }
-        }
-
-        if  ( (m_Window.IsWindowEnabled())  &&
-              (m_Window.GetCheck()) ) {
-            if  ( (m_Opening.IsWindowEnabled())  &&
-                  (m_Opening.GetCheck()) ) {
-                ifcWindowInstance = createIfcWindow(windowName, 0, windowYOffset, 0);
-
-                //
-                //      Build relation between Opening and Window
-                //
-                buildRelFillsElementInstance(ifcOpeningElementInstance, ifcWindowInstance);
-            } else {
-                ifcWindowInstance = createIfcWindow(windowName, 0, 0, 0);
-            }
-
-            switch  (GetCheckedRadioButton(IDC_RADIO_0_1, IDC_RADIO_0_2)) {
-                case  IDC_RADIO_0_1:
-                    pPolygon = localCreatePolygonStructureForSquare(0, 0, openingWidth, windowThickness);
-                    createIfcExtrudedPolygonShape(pPolygon, openingHeight);
-                    break;
-                case  IDC_RADIO_0_2:
-                    pShell = localCreateShellStructureForCuboid(0, 0, 0, openingWidth, windowThickness, openingHeight);
-                    createIfcBRepShape(pShell);
-                    break;
-                default:
-                    MessageBox("Unknown selected type");
-                    break;
-            }
-
-            if  (m_WallBasicRepr.GetCheck()) {
-                createIfcBoundingBoxShape(openingWidth, windowThickness, openingHeight, "Box");
-            }
-        }
+        if  (m_WallBasicRepr.GetCheck()) {
+            createIfcBoundingBoxShape(wallWidth, wallThickness, wallHeight, "Box");
+		}
+        
 
         //
         //  Update header
@@ -631,7 +564,7 @@ void CMiniExampleDlg::OnOK()
         } else {
             saveIfcFile(ifcFileName);
         }
-    } else {
+	} else {
         MessageBox("Model could not be instantiated, probably it cannot find the schema file.");
     }
 	
