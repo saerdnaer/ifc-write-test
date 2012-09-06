@@ -198,7 +198,7 @@ BOOL CMiniExampleDlg::OnInitDialog()
     m_Opening_Name.SetWindowText("Opening Element xyz");
     m_Window_Name.SetWindowText("Window xyz");
 
-    m_WallThickness.SetWindowText("300");
+    m_WallThickness.SetWindowText("5000");
     m_WallWidth.SetWindowText("5000");
     m_WallHeight.SetWindowText("2300");
     m_OpeningHeight.SetWindowText("1400");
