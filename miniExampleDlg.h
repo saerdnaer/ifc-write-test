@@ -14,6 +14,7 @@
 //  see other examples or contact:  pim.vandenhelm@tno.nl
 ////////////////////////////////////////////////////////////////////////
 
+#include "resource.h"
 
 #if !defined(AFX_MINIEXAMPLEDLG_H__E673F826_8678_41CC_92D0_C897178873FC__INCLUDED_)
 #define AFX_MINIEXAMPLEDLG_H__E673F826_8678_41CC_92D0_C897178873FC__INCLUDED_
