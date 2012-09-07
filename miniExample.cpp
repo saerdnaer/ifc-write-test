@@ -90,9 +90,9 @@ BOOL CMiniExampleApp::InitApplication()
 	ASSERT(ifcFileName == NULL  &&  i > 0);
 	ASSERT(ifcSchemaName == NULL  &&  i > 0);
 
-	ifcFileName = new char[i+strlen("example.ifc")+1];
+	ifcFileName = new char[i+strlen("building.ifc")+1];
 	memcpy(&ifcFileName[0], this->m_pszHelpFilePath, i);
-	memcpy(&ifcFileName[i], "example.ifc", strlen("example.ifc")+1);
+	memcpy(&ifcFileName[i], "building.ifc", strlen("building.ifc")+1);
 
     ifcSchemaName = new char[i+strlen("IFC2X3_Final.exp")+1];
 	memcpy(&ifcSchemaName[0], this->m_pszHelpFilePath, i);
