@@ -194,7 +194,7 @@ BOOL CMiniExampleDlg::OnInitDialog()
     m_FileName.SetWindowText(ifcFileName);
     m_SchemaName.SetWindowText(ifcSchemaName);
 
-    m_Wall_Name.SetWindowText("Wall xyz");
+    m_Wall_Name.SetWindowText("Building A");
     m_Opening_Name.SetWindowText("Opening Element xyz");
     m_Window_Name.SetWindowText("Window xyz");
 
@@ -216,9 +216,9 @@ BOOL CMiniExampleDlg::OnInitDialog()
 
     m_Wall.SetCheck(1);
     m_WallBasicRepr.SetCheck(1);
-    m_Opening.SetCheck(1);
+    //m_Opening.SetCheck(1);
     m_OpeningBasicRepr.SetCheck(1);
-    m_Window.SetCheck(1);
+    //m_Window.SetCheck(1);
     m_WindowBasicRepr.SetCheck(1);
 
     OnCheckWindow();
@@ -684,117 +684,16 @@ void CMiniExampleDlg::OnCheckWall()
 
         m_Opening.EnableWindow(true);
         OnCheckOpening();
-    } else {
-        m_Wall_Name.EnableWindow(false);
-        m_Static_0_Name.EnableWindow(false);
-        m_Static_0_0.EnableWindow(false);
-        GetDlgItem(IDC_RADIO_0_1)->EnableWindow(false);     
-        GetDlgItem(IDC_RADIO_0_2)->EnableWindow(false);
-        
-        m_Static_0_1.EnableWindow(false);
-        m_WallBasicRepr.EnableWindow(false);
-
-        m_Opening.EnableWindow(false);
-        m_Opening_Name.EnableWindow(false);
-        m_Static_1_Name.EnableWindow(false);
-        m_Static_1_0.EnableWindow(false);
-        GetDlgItem(IDC_RADIO_1_1)->EnableWindow(false);     
-        GetDlgItem(IDC_RADIO_1_2)->EnableWindow(false);   
-        
-        m_Static_1_1.EnableWindow(false);
-        m_OpeningBasicRepr.EnableWindow(false);
-        
-        m_Window.EnableWindow(true);
-        OnCheckWindow();
-    }
-
+	}
     EnableProperties();
 }
 
 void CMiniExampleDlg::OnCheckOpening() 
 {
-    if  (m_Opening.GetCheck()) {
-        m_Opening_Name.EnableWindow(true);
-        m_Static_1_Name.EnableWindow(true);
-        if  (view == COORDINATIONVIEW) {
-            m_Static_1_0.EnableWindow(true);
-
-            GetDlgItem(IDC_RADIO_1_1)->EnableWindow(true);     
-            GetDlgItem(IDC_RADIO_1_2)->EnableWindow(true);  
-            
-            if  (!GetCheckedRadioButton(IDC_RADIO_1_1, IDC_RADIO_1_1)) {
-                m_Static_1_1.EnableWindow(true);
-                m_OpeningBasicRepr.EnableWindow(true);
-            }
-        } else {
-            ASSERT(view == PRESENTATIONVIEW);
-            m_Static_1_0.EnableWindow(false);
-
-            GetDlgItem(IDC_RADIO_1_1)->EnableWindow(false);
-            GetDlgItem(IDC_RADIO_1_2)->EnableWindow(false);
-
-            m_Static_1_1.EnableWindow(false);
-            m_OpeningBasicRepr.EnableWindow(false);
-        }
-
-        m_Window.EnableWindow(true);
-        OnCheckWindow();
-    } else {
-        m_Opening_Name.EnableWindow(false);
-        m_Static_1_Name.EnableWindow(false);
-        m_Static_1_0.EnableWindow(false);
-        GetDlgItem(IDC_RADIO_1_1)->EnableWindow(false);     
-        GetDlgItem(IDC_RADIO_1_2)->EnableWindow(false);     
-        
-        m_Static_1_1.EnableWindow(false);
-        m_OpeningBasicRepr.EnableWindow(false);
-
-        m_Window.EnableWindow(false);
-        m_Window_Name.EnableWindow(false);
-        m_Static_2_Name.EnableWindow(false);
-        m_Static_2_0.EnableWindow(false);
-        GetDlgItem(IDC_RADIO_2_1)->EnableWindow(false);     
-        GetDlgItem(IDC_RADIO_2_2)->EnableWindow(false);   
-        
-        m_Static_2_1.EnableWindow(false);
-        m_WindowBasicRepr.EnableWindow(false);
-    }
-
-    EnableProperties();
 }
 
 void CMiniExampleDlg::OnCheckWindow() 
 {
-    if  (m_Window.GetCheck()) {
-        m_Window_Name.EnableWindow(true);
-        m_Static_2_Name.EnableWindow(true);
-        m_Static_2_0.EnableWindow(true);
-        if  (view == COORDINATIONVIEW) {
-            GetDlgItem(IDC_RADIO_2_1)->EnableWindow(true);     
-            GetDlgItem(IDC_RADIO_2_2)->EnableWindow(true);     
-        } else {
-            ASSERT(view == PRESENTATIONVIEW);
-            GetDlgItem(IDC_RADIO_2_1)->EnableWindow(false);     
-            GetDlgItem(IDC_RADIO_2_2)->EnableWindow(true);
-            OnRadio_2_2();
-        }
-
-        if  (!GetCheckedRadioButton(IDC_RADIO_2_1, IDC_RADIO_2_1)) {
-            m_Static_2_1.EnableWindow(true);
-            m_WindowBasicRepr.EnableWindow(true);
-        }
-    } else {
-        m_Window_Name.EnableWindow(false);
-        m_Static_2_Name.EnableWindow(false);
-        m_Static_2_0.EnableWindow(false);
-        GetDlgItem(IDC_RADIO_2_1)->EnableWindow(false);     
-        GetDlgItem(IDC_RADIO_2_2)->EnableWindow(false);     
-        
-        m_Static_2_1.EnableWindow(false);
-        m_WindowBasicRepr.EnableWindow(false);
-    }
-
-    EnableProperties();
 }
 
 void CMiniExampleDlg::OnRadio_View_0() 

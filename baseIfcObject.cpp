@@ -166,34 +166,12 @@ int		buildWallStandardCaseInstance(transformationMatrixStruct * pMatrix, int ifc
 
 int		buildOpeningElementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcOpeningElementInstancePlacement, char * pOpeningElementName)
 {
-	int		ifcOpeningElementInstance = sdaiCreateInstanceBN(model, "IFCOPENINGELEMENT");
-
-	sdaiPutAttrBN(ifcOpeningElementInstance, "GlobalId", sdaiSTRING, (void*) CreateCompressedGuidString());
-	sdaiPutAttrBN(ifcOpeningElementInstance, "OwnerHistory", sdaiINSTANCE, (void*) getOwnerHistoryInstance());
-	sdaiPutAttrBN(ifcOpeningElementInstance, "Name", sdaiSTRING, pOpeningElementName);
-	sdaiPutAttrBN(ifcOpeningElementInstance, "Description", sdaiSTRING, "Description of Opening");
-
-	(* ifcOpeningElementInstancePlacement) = buildLocalPlacementInstance(pMatrix, ifcPlacementRelativeTo);
-	sdaiPutAttrBN(ifcOpeningElementInstance, "ObjectPlacement", sdaiINSTANCE, (void*) (* ifcOpeningElementInstancePlacement));
-	sdaiPutAttrBN(ifcOpeningElementInstance, "Representation", sdaiINSTANCE, (void*) buildProductDefinitionShapeInstance());
-
-	return	ifcOpeningElementInstance;
+	return	0;
 }
 
 int		buildWindowInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWindowInstancePlacement, char * pWindowName)
 {
-	int		ifcWindowInstance = sdaiCreateInstanceBN(model, "IFCWINDOW");
-
-	sdaiPutAttrBN(ifcWindowInstance, "GlobalId", sdaiSTRING, (void*) CreateCompressedGuidString());
-	sdaiPutAttrBN(ifcWindowInstance, "OwnerHistory", sdaiINSTANCE, (void*) getOwnerHistoryInstance());
-	sdaiPutAttrBN(ifcWindowInstance, "Name", sdaiSTRING, pWindowName);
-	sdaiPutAttrBN(ifcWindowInstance, "Description", sdaiSTRING, "Description of Window");
-
-	(* ifcWindowInstancePlacement) = buildLocalPlacementInstance(pMatrix, ifcPlacementRelativeTo);
-	sdaiPutAttrBN(ifcWindowInstance, "ObjectPlacement", sdaiINSTANCE, (void*) (* ifcWindowInstancePlacement));
-	sdaiPutAttrBN(ifcWindowInstance, "Representation", sdaiINSTANCE, (void*) buildProductDefinitionShapeInstance());
-
-	return	ifcWindowInstance;
+	return	0;
 }
 
 
