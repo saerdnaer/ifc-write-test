@@ -519,6 +519,13 @@ int		buildRelContainedInSpatialStructureInstance(char * name, char * description
 //
 //
 
+// Workaround ... This functions are implemented in minExampleDlg.cpp as local functions and not mention in the header file
+// to use them here, we have to add the prototypes
+polygon2DStruct* localCreatePolygonStructureForSquare(double min_x, double min_y, double max_x, double max_y);
+shellStruct* localCreateShellStructureForCuboid(double min_x, double min_y, double min_z, double max_x, double max_y, double max_z);
+shellStruct* localCreateShellStructureForCuboidWithOpening(double min_x, double min_y, double min_z, double max_x, double max_y, double max_z, double min_x_opening, double min_z_opening, double max_x_opening, double max_z_opening);
+
+
 
 int		buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingInstancePlacement)
 {
