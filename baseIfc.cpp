@@ -17,6 +17,11 @@
 
 #include "stdafx.h"
 #include "baseIfc.h"
+#include "baseIfcObject.h"
+#include "extrudedPolygonIFC.h"
+#include "miniExampleDlg.h"
+
+#include "BRepIfc.h"
 
 int     model = 0,
         timeStamp;
@@ -529,6 +534,35 @@ int		buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacemen
 	(* ifcBuildingInstancePlacement) = buildLocalPlacementInstance(pMatrix, ifcPlacementRelativeTo);
 	sdaiPutAttrBN(ifcBuildingInstance, "ObjectPlacement", sdaiINSTANCE, (void*) (* ifcBuildingInstancePlacement));
 	sdaiPutAttrBN(ifcBuildingInstance, "CompositionType", sdaiENUM, "ELEMENT");
+
+	// Add geomertry of building 
+	sdaiPutAttrBN(ifcBuildingInstance, "Representation", sdaiINSTANCE, (void*) buildProductDefinitionShapeInstance());
+
+	double buildingWidth = 5000, buildingLength = 5000, buildingHeight = 2300;
+	
+
+	polygon2DStruct * pPolygon;
+    shellStruct     * pShell;
+ 
+	//poly 
+	if ( true ) {
+
+        buildRelAssociatesMaterial(ifcBuildingInstance, buildingLength);
+        createIfcPolylineShape(0, buildingLength/2, buildingWidth, buildingLength/2);
+
+        pPolygon = localCreatePolygonStructureForSquare(0, 0, buildingWidth, buildingLength);
+        createIfcExtrudedPolygonShape(pPolygon, buildingHeight);
+	}
+	//brep
+	else {
+        pShell = localCreateShellStructureForCuboid(0, 0, 0, buildingWidth, buildingLength, buildingHeight);
+        createIfcBRepShape(pShell);
+	}
+
+	if  (false) {
+        createIfcBoundingBoxShape(buildingWidth, buildingLength, buildingHeight, "Box");
+	}
+
 
 	return	ifcBuildingInstance;
 }
