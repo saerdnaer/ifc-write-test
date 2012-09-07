@@ -463,6 +463,7 @@ void CMiniExampleDlg::OnOK()
     m_WindowYOffset.GetWindowText(buffer, 512);
     windowYOffset = atoi(buffer);
 
+	
     if  ( ( (m_Wall.IsWindowEnabled())  &&
             (m_Wall.GetCheck()) ) ||
           ( (m_Window.IsWindowEnabled())  &&
@@ -474,7 +475,8 @@ void CMiniExampleDlg::OnOK()
 
     if  (createEmptyIfcFile(ifcSchemaName, objectsWillBeAdded)) 
 	{
-        switch  (GetCheckedRadioButton(IDC_RADIO_0_1, IDC_RADIO_0_2)) {
+        /*
+		switch  (GetCheckedRadioButton(IDC_RADIO_0_1, IDC_RADIO_0_2)) {
             case  IDC_RADIO_0_1:
                 ifcWallInstance = createIfcWallStandardCase(wallName, 0, 0, 0);
 
@@ -502,6 +504,7 @@ void CMiniExampleDlg::OnOK()
         if  (m_WallBasicRepr.GetCheck()) {
             createIfcBoundingBoxShape(wallWidth, wallThickness, wallHeight, "Box");
 		}
+		*/
         
 
         //
