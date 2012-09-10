@@ -9,3 +9,4 @@ Debug/
 *.vcxproj.filters
 *.sdf
 Release*
+*.suo
