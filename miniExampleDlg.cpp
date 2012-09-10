@@ -437,7 +437,7 @@ void genTimestamp(char *timeStamp) {
 
 void CMiniExampleDlg::OnOK() 
 {
-    char    ifcFileName[512], ifcSchemaName[512];
+    char ifcFileName[512], ifcSchemaName[512];
 
     m_FileName.GetWindowText(ifcFileName, 512);
     m_SchemaName.GetWindowText(ifcSchemaName, 512);
