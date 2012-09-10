@@ -195,35 +195,21 @@ BOOL CMiniExampleDlg::OnInitDialog()
     m_SchemaName.SetWindowText(ifcSchemaName);
 
     m_Wall_Name.SetWindowText("Building A");
-    m_Opening_Name.SetWindowText("Opening Element xyz");
-    m_Window_Name.SetWindowText("Window xyz");
 
     m_WallThickness.SetWindowText("5000");
     m_WallWidth.SetWindowText("5000");
     m_WallHeight.SetWindowText("2300");
-    m_OpeningHeight.SetWindowText("1400");
-    m_OpeningWidth.SetWindowText("750");
-    m_OpeningXOffset.SetWindowText("900");
-    m_OpeningZOffset.SetWindowText("250");
-    m_WindowThickness.SetWindowText("190");
-    m_WindowYOffset.SetWindowText("12");
 
     OnRadio_View_0();
 
     OnRadio_0_2();
-    OnRadio_1_2();
-    OnRadio_2_2();
+    //OnRadio_1_2();
+    //OnRadio_2_2();
 
     m_Wall.SetCheck(1);
     m_WallBasicRepr.SetCheck(1);
-    //m_Opening.SetCheck(1);
-    m_OpeningBasicRepr.SetCheck(1);
-    //m_Window.SetCheck(1);
-    m_WindowBasicRepr.SetCheck(1);
 
-    OnCheckWindow();
-    OnCheckOpening();
-    OnCheckWall();
+ 
 	
 	return  true;
 }
@@ -427,86 +413,13 @@ shellStruct * localCreateShellStructureForCuboidWithOpening(double min_x, double
 
 void CMiniExampleDlg::OnOK() 
 {
-    polygon2DStruct * pPolygon;
-    shellStruct     * pShell;
-    int     ifcWallInstance, ifcOpeningElementInstance, ifcWindowInstance,
-            wallHeight, wallWidth, wallThickness,
-            openingHeight, openingWidth, openingXOffset, openingZOffset,
-            windowThickness, windowYOffset;
-    char    ifcFileName[512], ifcSchemaName[512], buffer[512],
-            wallName[512], openingName[512], windowName[512];
-    bool    objectsWillBeAdded;
-    
+    char    ifcFileName[512], ifcSchemaName[512];
+
     m_FileName.GetWindowText(ifcFileName, 512);
     m_SchemaName.GetWindowText(ifcSchemaName, 512);
 
-    m_Wall_Name.GetWindowText(wallName, 512);
-    m_Opening_Name.GetWindowText(openingName, 512);
-    m_Window_Name.GetWindowText(windowName, 512);
-
-    m_WallHeight.GetWindowText(buffer, 512);
-    wallHeight = atoi(buffer);
-    m_WallWidth.GetWindowText(buffer, 512);
-    wallWidth = atoi(buffer);
-    m_WallThickness.GetWindowText(buffer, 512);
-    wallThickness = atoi(buffer);
-    m_OpeningHeight.GetWindowText(buffer, 512);
-    openingHeight = atoi(buffer);
-    m_OpeningWidth.GetWindowText(buffer, 512);
-    openingWidth = atoi(buffer);
-    m_OpeningXOffset.GetWindowText(buffer, 512);
-    openingXOffset = atoi(buffer);
-    m_OpeningZOffset.GetWindowText(buffer, 512);
-    openingZOffset = atoi(buffer);
-    m_WindowThickness.GetWindowText(buffer, 512);
-    windowThickness = atoi(buffer);
-    m_WindowYOffset.GetWindowText(buffer, 512);
-    windowYOffset = atoi(buffer);
-
-	
-    if  ( ( (m_Wall.IsWindowEnabled())  &&
-            (m_Wall.GetCheck()) ) ||
-          ( (m_Window.IsWindowEnabled())  &&
-            (m_Window.GetCheck()) ) ) {
-        objectsWillBeAdded = true;
-    } else {
-        objectsWillBeAdded = false;
-    }
-
-    if  (createEmptyIfcFile(ifcSchemaName, objectsWillBeAdded)) 
-	{
-        /*
-		switch  (GetCheckedRadioButton(IDC_RADIO_0_1, IDC_RADIO_0_2)) {
-            case  IDC_RADIO_0_1:
-                ifcWallInstance = createIfcWallStandardCase(wallName, 0, 0, 0);
-
-                buildRelAssociatesMaterial(ifcWallInstance, wallThickness);
-                createIfcPolylineShape(0, wallThickness/2, wallWidth, wallThickness/2);
-
-                pPolygon = localCreatePolygonStructureForSquare(0, 0, wallWidth, wallThickness);
-                createIfcExtrudedPolygonShape(pPolygon, wallHeight);
-                break;
-            case  IDC_RADIO_0_2:
-                ifcWallInstance = createIfcWall(wallName, 0, 0, 0);
-
-                if  ( (view == PRESENTATIONVIEW)  &&  (m_Opening.IsWindowEnabled()) ) {
-                    pShell = localCreateShellStructureForCuboidWithOpening(0, 0, 0, wallWidth, wallThickness, wallHeight, openingXOffset, openingZOffset, openingXOffset + openingWidth, openingZOffset + openingHeight);
-                } else {
-                    pShell = localCreateShellStructureForCuboid(0, 0, 0, wallWidth, wallThickness, wallHeight);
-                }
-                createIfcBRepShape(pShell);
-                break;
-            default:
-                MessageBox("Unknown selected type");
-                break;
-		}
-
-        if  (m_WallBasicRepr.GetCheck()) {
-            createIfcBoundingBoxShape(wallWidth, wallThickness, wallHeight, "Box");
-		}
-		*/
-        
-
+    if  (createEmptyIfcFile(ifcSchemaName, false)) 
+	{     
         //
         //  Update header
         //
@@ -576,6 +489,7 @@ void CMiniExampleDlg::OnOK()
 
 void CMiniExampleDlg::EnableProperties()
 {
+	/*
     if  ( (m_Wall.IsWindowEnabled())  &&
           (m_Wall.GetCheck()) ) {
         m_Static00.EnableWindow(true);
@@ -662,6 +576,7 @@ void CMiniExampleDlg::EnableProperties()
         m_Static71.EnableWindow(false);
         m_Static81.EnableWindow(false);
     }
+	*/
 }
 
 void CMiniExampleDlg::OnCheckWall() 
