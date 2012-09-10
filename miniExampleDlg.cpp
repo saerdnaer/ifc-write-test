@@ -411,6 +411,30 @@ shellStruct * localCreateShellStructureForCuboidWithOpening(double min_x, double
     return  pShell;
 }
 
+void genTimestamp(char *timeStamp) {
+	 
+	time_t t;
+    struct tm * tInfo;
+
+    time ( &t );
+    tInfo = localtime ( &t );
+
+	itoa(1900 + tInfo->tm_year, &timeStamp[0], 10);
+    itoa(100 + 1 + tInfo->tm_mon, &timeStamp[4], 10);
+    itoa(100 + tInfo->tm_mday, &timeStamp[7], 10);
+    timeStamp[4] = '-';
+    timeStamp[7] = '-';
+    itoa(100 + tInfo->tm_hour, &timeStamp[10], 10);
+    itoa(100 + tInfo->tm_min, &timeStamp[13], 10);
+    itoa(100 + tInfo->tm_sec, &timeStamp[16], 10);
+    timeStamp[10] = 'T';
+    timeStamp[13] = ':';
+    timeStamp[16] = ':';
+    timeStamp[19] = 0;
+        
+    //int hour = tm.tm_hour();
+}
+
 void CMiniExampleDlg::OnOK() 
 {
     char    ifcFileName[512], ifcSchemaName[512];
@@ -425,11 +449,6 @@ void CMiniExampleDlg::OnOK()
         //
 
         char    description[512], timeStamp[512];
-        time_t  t;
-        struct tm   * tInfo;
-
-        time ( &t );
-        tInfo = localtime ( &t );
 
         if  (view == COORDINATIONVIEW) {
             memcpy(description, "ViewDefinition [CoordinationView]", sizeof("ViewDefinition [CoordinationView]"));
@@ -438,6 +457,8 @@ void CMiniExampleDlg::OnOK()
             memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
         }
 
+		genTimestamp(timeStamp);
+
         int i = 0, j = 0;
         while  (ifcFileName[i]) {
             if  (ifcFileName[i++] == '\\') {
@@ -445,28 +466,14 @@ void CMiniExampleDlg::OnOK()
             }
         }
 
-        itoa(1900 + tInfo->tm_year, &timeStamp[0], 10);
-        itoa(100 + 1 + tInfo->tm_mon, &timeStamp[4], 10);
-        itoa(100 + tInfo->tm_mday, &timeStamp[7], 10);
-        timeStamp[4] = '-';
-        timeStamp[7] = '-';
-        itoa(100 + tInfo->tm_hour, &timeStamp[10], 10);
-        itoa(100 + tInfo->tm_min, &timeStamp[13], 10);
-        itoa(100 + tInfo->tm_sec, &timeStamp[16], 10);
-        timeStamp[10] = 'T';
-        timeStamp[13] = ':';
-        timeStamp[16] = ':';
-        timeStamp[19] = 0;
-        
 
-        //int hour = tm.tm_hour();
 
 
         SetSPFFHeader(
                 description,                        //  description
                 "2;1",                              //  implementationLevel
                 &ifcFileName[j],                    //  name
-                &timeStamp[0],                      //  timeStamp
+                timeStamp,							//  timeStamp
                 "Architect",                        //  author
                 "Building Designer Office",         //  organization
                 "IFC Engine DLL version 1.02 beta", //  preprocessorVersion
