@@ -46,57 +46,53 @@ int     ifcApplicationInstance,
         ifcUnitAssignmentInstance;
 
 
-bool    createEmptyIfcFile(char * ifcSchemaName, bool objectsWillBeAdded)
+bool IFCBuilder::createIfcFile(char * ifcSchemaName, bool objectsWillBeAdded)
 {
     transformationMatrixStruct    matrix;
 	
     model = sdaiCreateModelBN(1, NULL, ifcSchemaName);
 
-    if	(model) {
-        identityMatrix(&matrix);
-
-        ifcApplicationInstance = 0;
-        ifcBuildOwnerHistoryInstance = 0;
-        ifcConversionBasedUnitInstance = 0;
-        ifcDimensionalExponentsInstance = 0;
-        ifcGeometricRepresentationContextInstance = 0;
-        ifcOrganizationInstance = 0;
-        ifcPersonAndOrganizationInstance = 0;
-        ifcPersonInstance = 0;
-        ifcUnitAssignmentInstance = 0;
-
-		//
-		//	Build standard IFC structures
-		//
-
-		//
-		//		Build standard IFC objects
-		//
-		ifcProjectInstance = getProjectInstance();
-		ifcSiteInstance = buildSiteInstance(&matrix, NULL, &ifcSiteInstancePlacement);
-		ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);
-		//ifcBuildingStoreyInstance = buildBuildingStoreyInstance(&matrix, ifcBuildingInstancePlacement, &ifcBuildingStoreyInstancePlacement);
-
-		//
-		//		Build relations
-		//
-		//buildRelAggregatesInstance("BuildingContainer", "BuildingContainer for BuildigStories", ifcBuildingInstance, ifcBuildingStoreyInstance);
-		buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", ifcSiteInstance, ifcBuildingInstance);
-		buildRelAggregatesInstance("ProjectContainer", "ProjectContainer for Sites", ifcProjectInstance, ifcSiteInstance);
-		
-		/*
-        if  (objectsWillBeAdded) {
-		    buildRelContainedInSpatialStructureInstance("BuildingStoreyContainer", "BuildingStoreyContainer for Building Elements", ifcBuildingStoreyInstance, &aggrRelatedElements);
-        }
-		*/
-
-        return  true;
-    } else {
+    if	(!model) {
         return  false;
     }
+    identityMatrix(&matrix);
+
+    ifcApplicationInstance = 0;
+    ifcBuildOwnerHistoryInstance = 0;
+    ifcConversionBasedUnitInstance = 0;
+    ifcDimensionalExponentsInstance = 0;
+    ifcGeometricRepresentationContextInstance = 0;
+    ifcOrganizationInstance = 0;
+    ifcPersonAndOrganizationInstance = 0;
+    ifcPersonInstance = 0;
+    ifcUnitAssignmentInstance = 0;
+
+	//
+	//	Build standard IFC structures
+	//
+
+	ifcProjectInstance = getProjectInstance();
+	ifcSiteInstance = buildSiteInstance(&matrix, NULL, &ifcSiteInstancePlacement);
+	buildRelAggregatesInstance("ProjectContainer", "ProjectContainer for Sites", ifcProjectInstance, ifcSiteInstance);
+
+	//  CDP ToDo: Add loop for all buildings
+	ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);
+	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", ifcSiteInstance, ifcBuildingInstance);
+
+	// we don't modell the individual floors --Andreas
+	//ifcBuildingStoreyInstance = buildBuildingStoreyInstance(&matrix, ifcBuildingInstancePlacement, &ifcBuildingStoreyInstancePlacement);
+	//buildRelAggregatesInstance("BuildingContainer", "BuildingContainer for BuildigStories", ifcBuildingInstance, ifcBuildingStoreyInstance);
+		
+	/*
+    if  (objectsWillBeAdded) {
+		buildRelContainedInSpatialStructureInstance("BuildingStoreyContainer", "BuildingStoreyContainer for Building Elements", ifcBuildingStoreyInstance, &aggrRelatedElements);
+    }
+	*/
+
+    return  true;
 }
 
-bool    saveIfcFile(char * ifcFileName)
+bool IFCBuilder::saveIfcFile(char * ifcFileName)
 {
     if	(model) {
         //
@@ -110,7 +106,7 @@ bool    saveIfcFile(char * ifcFileName)
     }
 }
 
-bool    saveIfcFileAsXml(char * ifcFileName)
+bool IFCBuilder::saveIfcFileAsXml(char * ifcFileName)
 {
     if	(model) {
         //
@@ -124,7 +120,7 @@ bool    saveIfcFileAsXml(char * ifcFileName)
     }
 }
 
-void	identityMatrix(transformationMatrixStruct * pMatrix)
+void IFCBuilder::identityMatrix(transformationMatrixStruct * pMatrix)
 {
 	pMatrix->_11 = 1;
 	pMatrix->_12 = 0;
@@ -140,14 +136,14 @@ void	identityMatrix(transformationMatrixStruct * pMatrix)
 	pMatrix->_43 = 0;
 }
 
-void	identityPoint(point3DStruct * pPoint)
+void IFCBuilder::identityPoint(point3DStruct * pPoint)
 {
 	pPoint->x = 0;
 	pPoint->y = 0;
 	pPoint->z = 0;
 }
 
-int		* getTimeStamp()
+int* IFCBuilder::getTimeStamp()
 {
 	timeStamp = time(0);
 
@@ -162,7 +158,7 @@ int		* getTimeStamp()
 //
 
 
-char * CreateCompressedGuidString()
+char* IFCBuilder::CreateCompressedGuidString()
 {
 	char	* buf = (char *) malloc(23);
 	GUID	guid = GUID_NULL;
@@ -179,7 +175,7 @@ char * CreateCompressedGuidString()
 	return getString64FromGuid (&guid, buf);
 }
 
-char * getString64FromGuid(const GUID *pGuid, char * buf )
+char* IFCBuilder::getString64FromGuid(const GUID *pGuid, char * buf )
 {
     unsigned long   num[6];
     char            str[6][5];
@@ -209,7 +205,7 @@ char * getString64FromGuid(const GUID *pGuid, char * buf )
     return buf;
 }
 
-BOOL cv_to_64(const unsigned long number, char *code, int len)
+BOOL IFCBuilder::cv_to_64(const unsigned long number, char *code, int len)
 {
     unsigned long   act;
     int             iDigit, nDigits;
@@ -242,7 +238,7 @@ BOOL cv_to_64(const unsigned long number, char *code, int len)
 //
 
 
-int		getApplicationInstance()
+int	IFCBuilder::getApplicationInstance()
 {
 	if	(!ifcApplicationInstance) {
 		ifcApplicationInstance = sdaiCreateInstanceBN(model, "IFCAPPLICATION");
@@ -256,19 +252,7 @@ int		getApplicationInstance()
 	return	ifcApplicationInstance;
 }
 
-int		getOrganizationInstance()
-{
-	if	(!ifcOrganizationInstance) {
-		ifcOrganizationInstance = sdaiCreateInstanceBN(model, "IFCORGANIZATION");
-
-		sdaiPutAttrBN(ifcOrganizationInstance, "Name", sdaiSTRING, "TNO");
-		sdaiPutAttrBN(ifcOrganizationInstance, "Description", sdaiSTRING, "TNO Building Innovation");
-	}
-
-	return	ifcOrganizationInstance;
-}
-
-int		getOwnerHistoryInstance()
+int	IFCBuilder::getOwnerHistoryInstance()
 {
 	if	(!ifcBuildOwnerHistoryInstance) {
 		ifcBuildOwnerHistoryInstance = sdaiCreateInstanceBN(model, "IFCOWNERHISTORY");
@@ -282,7 +266,7 @@ int		getOwnerHistoryInstance()
 	return	ifcBuildOwnerHistoryInstance;
 }
 
-int		getPersonAndOrganizationInstance()
+int	IFCBuilder::getPersonAndOrganizationInstance()
 {
 	if	(!ifcPersonAndOrganizationInstance) {
 		ifcPersonAndOrganizationInstance = sdaiCreateInstanceBN(model, "IFCPERSONANDORGANIZATION");
@@ -294,19 +278,30 @@ int		getPersonAndOrganizationInstance()
 	return	ifcPersonAndOrganizationInstance;
 }
 
-int		getPersonInstance()
+int	IFCBuilder::getPersonInstance()
 {
 	if	(!ifcPersonInstance) {
 		ifcPersonInstance = sdaiCreateInstanceBN(model, "IFCPERSON");
 
-		sdaiPutAttrBN(ifcPersonInstance, "GivenName", sdaiSTRING, "Peter");
+		sdaiPutAttrBN(ifcPersonInstance, "GivenName", sdaiSTRING, "Hans");
 		sdaiPutAttrBN(ifcPersonInstance, "Id", sdaiSTRING, "ID001");
-		sdaiPutAttrBN(ifcPersonInstance, "FamilyName", sdaiSTRING, "Bonsma");
+		sdaiPutAttrBN(ifcPersonInstance, "FamilyName", sdaiSTRING, "Muster");
 	}
 
 	return	ifcPersonInstance;
 }
 
+int	IFCBuilder::getOrganizationInstance()
+{
+	if	(!ifcOrganizationInstance) {
+		ifcOrganizationInstance = sdaiCreateInstanceBN(model, "IFCORGANIZATION");
+
+		sdaiPutAttrBN(ifcOrganizationInstance, "Name", sdaiSTRING, "TUM");
+		sdaiPutAttrBN(ifcOrganizationInstance, "Description", sdaiSTRING, "Technische Universitaet Muenchen");
+	}
+
+	return	ifcOrganizationInstance;
+}
 
 //
 //
@@ -315,7 +310,7 @@ int		getPersonInstance()
 //
 
 
-int		buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix)
+int	IFCBuilder::buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix)
 {
 	int		ifcAxis2Placement3DInstance;
 
@@ -328,7 +323,7 @@ int		buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix)
 	return	ifcAxis2Placement3DInstance;
 }
 
-int		buildCartesianPointInstance(point3DStruct * pPoint)
+int	IFCBuilder::buildCartesianPointInstance(point3DStruct * pPoint)
 {
 	int		ifcCartesianPointInstance, * aggrCoordinates;
 
@@ -342,7 +337,7 @@ int		buildCartesianPointInstance(point3DStruct * pPoint)
 	return	ifcCartesianPointInstance;
 }
 
-int		buildDirectionInstance(point3DStruct * pPoint)
+int	IFCBuilder::buildDirectionInstance(point3DStruct * pPoint)
 {
 	int		ifcDirectionInstance, * aggrDirectionRatios;
 	double	_null = 0, _one = 1;
@@ -357,7 +352,7 @@ int		buildDirectionInstance(point3DStruct * pPoint)
 	return	ifcDirectionInstance;
 }
 
-int		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo)
+int	IFCBuilder::buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo)
 {
 	int		ifcLocalPlacementInstance;
 
@@ -379,7 +374,7 @@ int		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPl
 //
 
 
-int		getConversionBasedUnitInstance()
+int	IFCBuilder::getConversionBasedUnitInstance()
 {
 	if	(!ifcConversionBasedUnitInstance) {
 		ifcConversionBasedUnitInstance = sdaiCreateInstanceBN(model, "IFCCONVERSIONBASEDUNIT");
@@ -393,7 +388,7 @@ int		getConversionBasedUnitInstance()
 	return	ifcConversionBasedUnitInstance;
 }
 
-int		getDimensionalExponentsInstance()
+int	IFCBuilder::getDimensionalExponentsInstance()
 {
 	int		LengthExponent = 0,
 			MassExponent = 0,
@@ -418,7 +413,7 @@ int		getDimensionalExponentsInstance()
 	return	ifcDimensionalExponentsInstance;
 }
 
-int		buildMeasureWithUnitInstance()
+int	IFCBuilder::buildMeasureWithUnitInstance()
 {
 	int		ifcMeasureWithUnitInstance;
 	void	* valueComponentADB;
@@ -435,7 +430,7 @@ int		buildMeasureWithUnitInstance()
 	return	ifcMeasureWithUnitInstance;
 }
 
-int		buildSIUnitInstance(char * UnitType, char * Prefix, char * Name)
+int	IFCBuilder::buildSIUnitInstance(char * UnitType, char * Prefix, char * Name)
 {
 	int		ifcSIUnitInstance;
 
@@ -451,7 +446,7 @@ int		buildSIUnitInstance(char * UnitType, char * Prefix, char * Name)
 	return	ifcSIUnitInstance;
 }
 
-int		getUnitAssignmentInstance()
+int	IFCBuilder::getUnitAssignmentInstance()
 {
 	int		* aggrUnits;
 
@@ -481,7 +476,7 @@ int		getUnitAssignmentInstance()
 //
 
 
-int		buildRelAggregatesInstance(char * name, char * description, int ifcRelatingObjectInstance, int ifcRelatedObjectInstance)
+int	IFCBuilder::buildRelAggregatesInstance(char * name, char * description, int ifcRelatingObjectInstance, int ifcRelatedObjectInstance)
 {
 	int		ifcRelAggregatesInstance, * aggrRelatedObjects;
 
@@ -498,7 +493,7 @@ int		buildRelAggregatesInstance(char * name, char * description, int ifcRelating
 	return	ifcRelAggregatesInstance;
 }
 
-int		buildRelContainedInSpatialStructureInstance(char * name, char * description, int ifcRelatingStructureInstance, int ** aggrRelatedElements)
+int	IFCBuilder::buildRelContainedInSpatialStructureInstance(char * name, char * description, int ifcRelatingStructureInstance, int ** aggrRelatedElements)
 {
 	int		ifcRelContainedInSpatialStructureInstance;
 
@@ -521,15 +516,56 @@ int		buildRelContainedInSpatialStructureInstance(char * name, char * description
 //
 //
 
-// Workaround ... This functions are implemented in minExampleDlg.cpp as local functions and not mention in the header file
-// to use them here, we have to add the prototypes
-polygon2DStruct* localCreatePolygonStructureForSquare(double min_x, double min_y, double max_x, double max_y);
-shellStruct* localCreateShellStructureForCuboid(double min_x, double min_y, double min_z, double max_x, double max_y, double max_z);
-shellStruct* localCreateShellStructureForCuboidWithOpening(double min_x, double min_y, double min_z, double max_x, double max_y, double max_z, double min_x_opening, double min_z_opening, double max_x_opening, double max_z_opening);
+int	IFCBuilder::getProjectInstance()
+{
+    int * aggrRepresentationContexts = NULL;
+
+	if	(! ifcProjectInstance) {
+		ifcProjectInstance = sdaiCreateInstanceBN(model, "IFCPROJECT");
+
+		sdaiPutAttrBN(ifcProjectInstance, "GlobalId", sdaiSTRING, (void*) CreateCompressedGuidString());
+		sdaiPutAttrBN(ifcProjectInstance, "OwnerHistory", sdaiINSTANCE, (void*) getOwnerHistoryInstance());
+		sdaiPutAttrBN(ifcProjectInstance, "Name", sdaiSTRING, "Default Project");
+		sdaiPutAttrBN(ifcProjectInstance, "Description", sdaiSTRING, "Description of Default Project");
+		sdaiPutAttrBN(ifcProjectInstance, "UnitsInContext", sdaiINSTANCE, (void*) getUnitAssignmentInstance());
+	    aggrRepresentationContexts = sdaiCreateAggrBN(ifcProjectInstance, "RepresentationContexts");
+    	sdaiAppend((int) aggrRepresentationContexts, sdaiINSTANCE, (void*) getGeometricRepresentationContextInstance());
+	}
+
+	return	ifcProjectInstance;
+}
+
+int	IFCBuilder::buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcSiteInstancePlacement)
+{
+	int		ifcSiteInstance, * aggrRefLatitude, * aggrRefLongitude,
+			refLat_x = 24, refLat_y = 28, refLat_z = 0, refLong_x = 54, refLong_y = 25, refLong_z = 0;
+
+	ifcSiteInstance = sdaiCreateInstanceBN(model, "IFCSITE");
+
+	sdaiPutAttrBN(ifcSiteInstance, "GlobalId", sdaiSTRING, (void*) CreateCompressedGuidString());
+	sdaiPutAttrBN(ifcSiteInstance, "OwnerHistory", sdaiINSTANCE, (void*) getOwnerHistoryInstance());
+	sdaiPutAttrBN(ifcSiteInstance, "Name", sdaiSTRING, "Default Site");
+	sdaiPutAttrBN(ifcSiteInstance, "Description", sdaiSTRING, "Description of Default Site");
+
+	(* ifcSiteInstancePlacement) = buildLocalPlacementInstance(pMatrix, ifcPlacementRelativeTo);
+	sdaiPutAttrBN(ifcSiteInstance, "ObjectPlacement", sdaiINSTANCE, (void*) (* ifcSiteInstancePlacement));
+	sdaiPutAttrBN(ifcSiteInstance, "CompositionType", sdaiENUM, "ELEMENT");
+
+	aggrRefLatitude = sdaiCreateAggrBN(ifcSiteInstance, "RefLatitude");
+	sdaiAppend((int) aggrRefLatitude, sdaiINTEGER, &refLat_x);
+	sdaiAppend((int) aggrRefLatitude, sdaiINTEGER, &refLat_y);
+	sdaiAppend((int) aggrRefLatitude, sdaiINTEGER, &refLat_z);
+
+	aggrRefLongitude = sdaiCreateAggrBN(ifcSiteInstance, "RefLongitude");
+	sdaiAppend((int) aggrRefLongitude, sdaiINTEGER, &refLong_x);
+	sdaiAppend((int) aggrRefLongitude, sdaiINTEGER, &refLong_y);
+	sdaiAppend((int) aggrRefLongitude, sdaiINTEGER, &refLong_z);
+
+	return	ifcSiteInstance;
+}
 
 
-
-int		buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingInstancePlacement)
+int	IFCBuilder::buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingInstancePlacement)
 {
 	int		ifcBuildingInstance;
 
@@ -576,7 +612,7 @@ int		buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacemen
 	return	ifcBuildingInstance;
 }
 
-int		buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingStoreyInstancePlacement)
+int	IFCBuilder::buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingStoreyInstancePlacement)
 {
 	int		ifcBuildingStoreyInstance;
 	double	elevation = 0;
@@ -596,54 +632,158 @@ int		buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int ifcPl
 	return	ifcBuildingStoreyInstance;
 }
 
-int		getProjectInstance()
+
+//
+//
+// Helper functions for example data, formerly als local functions minExampleDlg.cpp 
+// --Andreas
+//
+//
+point3DStruct* IFCBuilder::create3DPoint(point3DStruct ** pPoint, double x, double y, double z)
 {
-    int * aggrRepresentationContexts = NULL;
+    (* pPoint) = new point3DStruct();
+    (* pPoint)->x = x;
+    (* pPoint)->y = y;
+    (* pPoint)->z = z;
+    (* pPoint)->ifcCartesianPointInstance = 0;
 
-	if	(! ifcProjectInstance) {
-		ifcProjectInstance = sdaiCreateInstanceBN(model, "IFCPROJECT");
-
-		sdaiPutAttrBN(ifcProjectInstance, "GlobalId", sdaiSTRING, (void*) CreateCompressedGuidString());
-		sdaiPutAttrBN(ifcProjectInstance, "OwnerHistory", sdaiINSTANCE, (void*) getOwnerHistoryInstance());
-		sdaiPutAttrBN(ifcProjectInstance, "Name", sdaiSTRING, "Default Project");
-		sdaiPutAttrBN(ifcProjectInstance, "Description", sdaiSTRING, "Description of Default Project");
-		sdaiPutAttrBN(ifcProjectInstance, "UnitsInContext", sdaiINSTANCE, (void*) getUnitAssignmentInstance());
-	    aggrRepresentationContexts = sdaiCreateAggrBN(ifcProjectInstance, "RepresentationContexts");
-    	sdaiAppend((int) aggrRepresentationContexts, sdaiINSTANCE, (void*) getGeometricRepresentationContextInstance());
-	}
-
-	return	ifcProjectInstance;
+    return  (* pPoint);
 }
 
-int		buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcSiteInstancePlacement)
+polygon2DStruct * IFCBuilder::localCreatePolygonStructureForSquare(double min_x, double min_y, double max_x, double max_y)
 {
-	int		ifcSiteInstance, * aggrRefLatitude, * aggrRefLongitude,
-			refLat_x = 24, refLat_y = 28, refLat_z = 0, refLong_x = 54, refLong_y = 25, refLong_z = 0;
+    polygon2DStruct * pPolygon;
 
-	ifcSiteInstance = sdaiCreateInstanceBN(model, "IFCSITE");
+    pPolygon = new polygon2DStruct();
+    pPolygon->pPoint = new point2DStruct();
+    pPolygon->pPoint->x = min_x;
+    pPolygon->pPoint->y = min_y;
+    pPolygon->next = new polygon2DStruct();
+    pPolygon->next->pPoint = new point2DStruct();
+    pPolygon->next->pPoint->x = min_x;
+    pPolygon->next->pPoint->y = max_y;
+    pPolygon->next->next = new polygon2DStruct();
+    pPolygon->next->next->pPoint = new point2DStruct();
+    pPolygon->next->next->pPoint->x = max_x;
+    pPolygon->next->next->pPoint->y = max_y;
+    pPolygon->next->next->next = new polygon2DStruct();
+    pPolygon->next->next->next->pPoint = new point2DStruct();
+    pPolygon->next->next->next->pPoint->x = max_x;
+    pPolygon->next->next->next->pPoint->y = min_y;
+    pPolygon->next->next->next->next = 0;
 
-	sdaiPutAttrBN(ifcSiteInstance, "GlobalId", sdaiSTRING, (void*) CreateCompressedGuidString());
-	sdaiPutAttrBN(ifcSiteInstance, "OwnerHistory", sdaiINSTANCE, (void*) getOwnerHistoryInstance());
-	sdaiPutAttrBN(ifcSiteInstance, "Name", sdaiSTRING, "Default Site");
-	sdaiPutAttrBN(ifcSiteInstance, "Description", sdaiSTRING, "Description of Default Site");
-
-	(* ifcSiteInstancePlacement) = buildLocalPlacementInstance(pMatrix, ifcPlacementRelativeTo);
-	sdaiPutAttrBN(ifcSiteInstance, "ObjectPlacement", sdaiINSTANCE, (void*) (* ifcSiteInstancePlacement));
-	sdaiPutAttrBN(ifcSiteInstance, "CompositionType", sdaiENUM, "ELEMENT");
-
-	aggrRefLatitude = sdaiCreateAggrBN(ifcSiteInstance, "RefLatitude");
-	sdaiAppend((int) aggrRefLatitude, sdaiINTEGER, &refLat_x);
-	sdaiAppend((int) aggrRefLatitude, sdaiINTEGER, &refLat_y);
-	sdaiAppend((int) aggrRefLatitude, sdaiINTEGER, &refLat_z);
-
-	aggrRefLongitude = sdaiCreateAggrBN(ifcSiteInstance, "RefLongitude");
-	sdaiAppend((int) aggrRefLongitude, sdaiINTEGER, &refLong_x);
-	sdaiAppend((int) aggrRefLongitude, sdaiINTEGER, &refLong_y);
-	sdaiAppend((int) aggrRefLongitude, sdaiINTEGER, &refLong_z);
-
-	return	ifcSiteInstance;
+    return  pPolygon;
 }
 
+polygon3DStruct * IFCBuilder::create3DPolygonWith4Vectors(polygon3DStruct ** pPolygon, point3DStruct * pPointI, point3DStruct * pPointII, point3DStruct * pPointIII, point3DStruct * pPointIV)
+{
+    vector3DStruct  * pVector;
+
+    pVector = new vector3DStruct();
+    pVector->pPoint = pPointI;
+    pVector->next = new vector3DStruct();
+    pVector->next->pPoint = pPointII;
+    pVector->next->next = new vector3DStruct();
+    pVector->next->next->pPoint = pPointIII;
+    pVector->next->next->next = new vector3DStruct();
+    pVector->next->next->next->pPoint = pPointIV;
+    pVector->next->next->next->next = NULL;
+
+    (* pPolygon) = new polygon3DStruct();
+    (* pPolygon)->pVector = pVector;
+    (* pPolygon)->pOpeningVector = NULL;
+    (* pPolygon)->next = NULL;
+
+    return  (* pPolygon);
+}
+
+void IFCBuilder::add3DPolygonOpeningWith4Vectors(polygon3DStruct * polygon, point3DStruct * pPointI, point3DStruct * pPointII, point3DStruct * pPointIII, point3DStruct * pPointIV)
+{
+    vector3DStruct  * pVector;
+
+    pVector = new vector3DStruct();
+    pVector->pPoint = pPointI;
+    pVector->next = new vector3DStruct();
+    pVector->next->pPoint = pPointII;
+    pVector->next->next = new vector3DStruct();
+    pVector->next->next->pPoint = pPointIII;
+    pVector->next->next->next = new vector3DStruct();
+    pVector->next->next->next->pPoint = pPointIV;
+    pVector->next->next->next->next = NULL;
+
+    polygon->pOpeningVector = pVector;
+}
+
+shellStruct * IFCBuilder::localCreateShellStructureForCuboid(double min_x, double min_y, double min_z, double max_x, double max_y, double max_z)
+{
+    point3DStruct   * pPoints[8];
+    polygon3DStruct * pPolygons[6];
+    shellStruct     * pShell;
+
+    create3DPoint(&pPoints[0], min_x, min_y, min_z);
+    create3DPoint(&pPoints[1], max_x, min_y, min_z);
+    create3DPoint(&pPoints[2], min_x, max_y, min_z);
+    create3DPoint(&pPoints[3], max_x, max_y, min_z);
+    create3DPoint(&pPoints[4], min_x, min_y, max_z);
+    create3DPoint(&pPoints[5], max_x, min_y, max_z);
+    create3DPoint(&pPoints[6], min_x, max_y, max_z);
+    create3DPoint(&pPoints[7], max_x, max_y, max_z);
+
+    pShell = new shellStruct();
+    pShell->pPolygon = create3DPolygonWith4Vectors(&pPolygons[0], pPoints[0], pPoints[2], pPoints[3], pPoints[1]);
+    pShell->next = NULL;
+
+    pPolygons[0]->next = create3DPolygonWith4Vectors(&pPolygons[1], pPoints[4], pPoints[5], pPoints[7], pPoints[6]);
+    pPolygons[1]->next = create3DPolygonWith4Vectors(&pPolygons[2], pPoints[0], pPoints[4], pPoints[6], pPoints[2]);
+    pPolygons[2]->next = create3DPolygonWith4Vectors(&pPolygons[3], pPoints[2], pPoints[6], pPoints[7], pPoints[3]);
+    pPolygons[3]->next = create3DPolygonWith4Vectors(&pPolygons[4], pPoints[3], pPoints[7], pPoints[5], pPoints[1]);
+    pPolygons[4]->next = create3DPolygonWith4Vectors(&pPolygons[5], pPoints[1], pPoints[5], pPoints[4], pPoints[0]);
+
+    return  pShell;
+}
+
+shellStruct * IFCBuilder::localCreateShellStructureForCuboidWithOpening(double min_x, double min_y, double min_z, double max_x, double max_y, double max_z, double min_x_opening, double min_z_opening, double max_x_opening, double max_z_opening)
+{
+    point3DStruct   * pPoints[16];
+    polygon3DStruct * pPolygons[10];
+    shellStruct     * pShell;
+
+    create3DPoint(&pPoints[0], min_x, min_y, min_z);
+    create3DPoint(&pPoints[1], max_x, min_y, min_z);
+    create3DPoint(&pPoints[2], min_x, max_y, min_z);
+    create3DPoint(&pPoints[3], max_x, max_y, min_z);
+    create3DPoint(&pPoints[4], min_x, min_y, max_z);
+    create3DPoint(&pPoints[5], max_x, min_y, max_z);
+    create3DPoint(&pPoints[6], min_x, max_y, max_z);
+    create3DPoint(&pPoints[7], max_x, max_y, max_z);
+    create3DPoint(&pPoints[8], min_x_opening, min_y, min_z_opening);
+    create3DPoint(&pPoints[9], max_x_opening, min_y, min_z_opening);
+    create3DPoint(&pPoints[10], min_x_opening, max_y, min_z_opening);
+    create3DPoint(&pPoints[11], max_x_opening, max_y, min_z_opening);
+    create3DPoint(&pPoints[12], min_x_opening, min_y, max_z_opening);
+    create3DPoint(&pPoints[13], max_x_opening, min_y, max_z_opening);
+    create3DPoint(&pPoints[14], min_x_opening, max_y, max_z_opening);
+    create3DPoint(&pPoints[15], max_x_opening, max_y, max_z_opening);
+
+    pShell = new shellStruct();
+    pShell->pPolygon = create3DPolygonWith4Vectors(&pPolygons[0], pPoints[0], pPoints[2], pPoints[3], pPoints[1]);
+    pShell->next = NULL;
+    pPolygons[0]->next = create3DPolygonWith4Vectors(&pPolygons[1], pPoints[4], pPoints[5], pPoints[7], pPoints[6]);
+    pPolygons[1]->next = create3DPolygonWith4Vectors(&pPolygons[2], pPoints[0], pPoints[4], pPoints[6], pPoints[2]);
+    pPolygons[2]->next = create3DPolygonWith4Vectors(&pPolygons[3], pPoints[2], pPoints[6], pPoints[7], pPoints[3]);
+    pPolygons[3]->next = create3DPolygonWith4Vectors(&pPolygons[4], pPoints[3], pPoints[7], pPoints[5], pPoints[1]);
+    pPolygons[4]->next = create3DPolygonWith4Vectors(&pPolygons[5], pPoints[1], pPoints[5], pPoints[4], pPoints[0]);
+
+    pPolygons[5]->next = create3DPolygonWith4Vectors(&pPolygons[6], pPoints[0+8], pPoints[1+8], pPoints[3+8], pPoints[2+8]);
+    pPolygons[6]->next = create3DPolygonWith4Vectors(&pPolygons[7], pPoints[4+8], pPoints[6+8], pPoints[7+8], pPoints[5+8]);
+    pPolygons[7]->next = create3DPolygonWith4Vectors(&pPolygons[8], pPoints[0+8], pPoints[2+8], pPoints[6+8], pPoints[4+8]);
+    pPolygons[8]->next = create3DPolygonWith4Vectors(&pPolygons[9], pPoints[3+8], pPoints[1+8], pPoints[5+8], pPoints[7+8]);
+
+    add3DPolygonOpeningWith4Vectors(pPolygons[3], pPoints[2+8], pPoints[3+8], pPoints[7+8], pPoints[6+8]);
+    add3DPolygonOpeningWith4Vectors(pPolygons[5], pPoints[1+8], pPoints[0+8], pPoints[4+8], pPoints[5+8]);
+
+    return  pShell;
+}
 
 //
 //
@@ -652,7 +792,7 @@ int		buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRel
 //
 
 
-int     getWorldCoordinateSystemInstance()
+int IFCBuilder::getWorldCoordinateSystemInstance()
 {
     point3DStruct   point;
 
@@ -663,7 +803,7 @@ int     getWorldCoordinateSystemInstance()
     return  ifcWorldCoordinateSystemInstance;
 }
 
-int     getGeometricRepresentationContextInstance()
+int IFCBuilder::getGeometricRepresentationContextInstance()
 {
     if  (! ifcGeometricRepresentationContextInstance) {
         double  precision = 0.00001;
