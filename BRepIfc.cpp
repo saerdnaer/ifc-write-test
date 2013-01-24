@@ -16,17 +16,12 @@
 
 
 #include "stdafx.h"
-#include "BRepIfc.h"
-
-extern  int     model;
-
-extern  int     * aggrRelatedElements,
-                * aggrRepresentations;
+#include "baseIfc.h"
 
 
-void    createIfcBRepShape(shellStruct * pShell)
+void    IFCBuilder::createIfcBRepShape(shellStruct* pShell)
 {
-    sdaiAppend((int) aggrRepresentations, sdaiINSTANCE, (void*) buildShapeRepresentationInstance(pShell));
+       sdaiAppend((int) aggrRepresentations, sdaiINSTANCE, (void*) buildShapeRepresentationInstance(pShell));
 }
 
 
@@ -37,9 +32,10 @@ void    createIfcBRepShape(shellStruct * pShell)
 //
 
 
-int		buildShapeRepresentationInstance(shellStruct * pShell)
+int IFCBuilder::buildShapeRepresentationInstance(shellStruct* pShell)
 {
-	int		ifcShapeRepresentationInstance, * aggrItems;
+	int ifcShapeRepresentationInstance;
+	int* aggrItems;
 
 	ifcShapeRepresentationInstance = sdaiCreateInstanceBN(model, "IFCSHAPEREPRESENTATION");
 
@@ -50,23 +46,23 @@ int		buildShapeRepresentationInstance(shellStruct * pShell)
 	sdaiPutAttrBN(ifcShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*) getGeometricRepresentationContextInstance());
 
     while  (pShell) {
-        POLYGON3DSTRUCT   * pPolygon = pShell->pPolygon;
-        int     ifcFacetedBrepInstance, ifcClosedShellInstance, * aggrCfsFaces;
+        POLYGON3DSTRUCT  * pPolygon = pShell->pPolygon;
+        int     ifcFacetedBrepInstance, ifcClosedShellInstance,* aggrCfsFaces;
 
 	    ifcClosedShellInstance = sdaiCreateInstanceBN(model, "IFCCLOSEDSHELL");
 	    aggrCfsFaces = sdaiCreateAggrBN(ifcClosedShellInstance, "CfsFaces");
 
         while  (pPolygon) {
-            VECTOR3DSTRUCT  * pVector = pPolygon->pVector;
-	        int		ifcPolyLoopInstance, * aggrPolygon,
+            VECTOR3DSTRUCT * pVector = pPolygon->pVector;
+	        int ifcPolyLoopInstance,* aggrPolygon,
                     ifcFaceOuterBoundInstance,
-                    ifcFaceInstance, * aggrBounds;
+                    ifcFaceInstance,* aggrBounds;
 
 	        ifcPolyLoopInstance = sdaiCreateInstanceBN(model, "IFCPOLYLOOP");
 	        aggrPolygon = sdaiCreateAggrBN(ifcPolyLoopInstance, "Polygon");
 
             while  (pVector) {
-                POINT3DSTRUCT   * pPoint = pVector->pPoint;
+                POINT3DSTRUCT  * pPoint = pVector->pPoint;
                 //
                 //  Check if point is already written
                 //
@@ -90,7 +86,7 @@ int		buildShapeRepresentationInstance(shellStruct * pShell)
 	        sdaiAppend((int) aggrCfsFaces, sdaiINSTANCE, (void *) ifcFaceInstance);
 
             if  (pPolygon->pOpeningVector) {
-	            int		ifcFaceBoundInstance;
+	            int ifcFaceBoundInstance;
 
                 pVector = pPolygon->pOpeningVector;
 
@@ -98,7 +94,7 @@ int		buildShapeRepresentationInstance(shellStruct * pShell)
 	            aggrPolygon = sdaiCreateAggrBN(ifcPolyLoopInstance, "Polygon");
 
                 while  (pVector) {
-                    POINT3DSTRUCT   * pPoint = pVector->pPoint;
+                    POINT3DSTRUCT  * pPoint = pVector->pPoint;
                     //
                     //  Check if point is already written
                     //

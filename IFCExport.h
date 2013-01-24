@@ -4,7 +4,9 @@
 
 
 
-#include "BRepIfc.h"
+#include "baseIfc.h"
+
+
 
 class IFCExport
 {
@@ -12,14 +14,11 @@ public:
 	IFCExport();
 	~IFCExport();
 	void export_ifc();
-	void genTimestamp(char *timeStamp);
 
 private:
-	BaseIFC* baseIFC;
+	IFCBuilder* builder;
 	char* ifcSchemaName, * ifcFileName;
 	bool saveIfx;
 	int view;
-}
+};
 
-#define     COORDINATIONVIEW    0
-#define     PRESENTATIONVIEW    1

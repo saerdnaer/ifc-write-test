@@ -16,7 +16,7 @@
 
 
 #include "stdafx.h"
-#include "BRepIfc.h"
+#include "baseIfc.h"
 #include "miniExample.h"
 #include "miniExampleDlg.h"
 
@@ -411,29 +411,6 @@ shellStruct * localCreateShellStructureForCuboidWithOpening(double min_x, double
     return  pShell;
 }
 
-void genTimestamp(char *timeStamp) {
-	 
-	time_t t;
-    struct tm * tInfo;
-
-    time ( &t );
-    tInfo = localtime ( &t );
-
-	itoa(1900 + tInfo->tm_year, &timeStamp[0], 10);
-    itoa(100 + 1 + tInfo->tm_mon, &timeStamp[4], 10);
-    itoa(100 + tInfo->tm_mday, &timeStamp[7], 10);
-    timeStamp[4] = '-';
-    timeStamp[7] = '-';
-    itoa(100 + tInfo->tm_hour, &timeStamp[10], 10);
-    itoa(100 + tInfo->tm_min, &timeStamp[13], 10);
-    itoa(100 + tInfo->tm_sec, &timeStamp[16], 10);
-    timeStamp[10] = 'T';
-    timeStamp[13] = ':';
-    timeStamp[16] = ':';
-    timeStamp[19] = 0;
-        
-    //int hour = tm.tm_hour();
-}
 
 void CMiniExampleDlg::OnOK() 
 {
@@ -442,7 +419,9 @@ void CMiniExampleDlg::OnOK()
     m_FileName.GetWindowText(ifcFileName, 512);
     m_SchemaName.GetWindowText(ifcSchemaName, 512);
 
-    if  (createEmptyIfcFile(ifcSchemaName, false)) 
+	IFCBuilder* builder = new IFCBuilder();
+
+    if  (builder->createIfcFile(ifcSchemaName, false)) 
 	{     
         //
         //  Update header
@@ -457,7 +436,7 @@ void CMiniExampleDlg::OnOK()
             memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
         }
 
-		genTimestamp(timeStamp);
+		builder->genIfcTimestamp(timeStamp);
 
         int i = 0, j = 0;
         while  (ifcFileName[i]) {
@@ -465,9 +444,6 @@ void CMiniExampleDlg::OnOK()
                 j = i;
             }
         }
-
-
-
 
         SetSPFFHeader(
                 description,                        //  description
@@ -483,9 +459,9 @@ void CMiniExampleDlg::OnOK()
             );
 
         if  (saveIfx) {
-            saveIfcFileAsXml(ifcFileName);
+            builder->saveIfcFileAsXml(ifcFileName);
         } else {
-            saveIfcFile(ifcFileName);
+            builder->saveIfcFile(ifcFileName);
         }
 	} else {
         MessageBox("Model could not be instantiated, probably it cannot find the schema file.");

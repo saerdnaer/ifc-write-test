@@ -14,36 +14,66 @@
 //  see other examples or contact:  pim.vandenhelm@tno.nl
 ////////////////////////////////////////////////////////////////////////
 
-
 #include "stdafx.h"
+#include <iostream>
 #include "baseIfc.h"
-#include "baseIfcObject.h"
-#include "extrudedPolygonIFC.h"
-#include "miniExampleDlg.h"
 
-#include "BRepIfc.h"
+IFCBuilder::IFCBuilder() {
+	model = 0; 
+	saveIfx = false;
+}
 
-int     model = 0,
-        timeStamp;
+void IFCBuilder::convert() 
+{
+    char ifcFileName[] = "building_test.ifc", 
+		ifcSchemaName[] = "IFC2X3_Final.exp";
 
-int     * aggrRelatedElements;
+    if  (!createIfcFile(ifcSchemaName, false)) 
+	{
+        std::cout << ("IFC Model could not be instantiated, probably it cannot find the schema file.");
+    }
 
-int     ifcApplicationInstance,
-        ifcBuildingInstance,
-        ifcBuildingInstancePlacement,
-        ifcBuildingStoreyInstance,
-        ifcBuildingStoreyInstancePlacement,
-        ifcBuildOwnerHistoryInstance,
-        ifcConversionBasedUnitInstance,
-        ifcDimensionalExponentsInstance,
-        ifcGeometricRepresentationContextInstance,
-        ifcOrganizationInstance,
-        ifcPersonAndOrganizationInstance,
-        ifcPersonInstance,
-        ifcProjectInstance,
-        ifcSiteInstance,
-        ifcSiteInstancePlacement,
-        ifcUnitAssignmentInstance;
+    //
+    //  Update header
+    //
+
+    char description[512], timeStamp[512];
+
+    if  (view == COORDINATIONVIEW) {
+        memcpy(description, "ViewDefinition [CoordinationView]", sizeof("ViewDefinition [CoordinationView]"));
+    } else {
+        //ASSERT(view == PRESENTATIONVIEW);
+        memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
+    }
+
+	genIfcTimestamp(timeStamp);
+
+    int i = 0, j = 0;
+    while  (ifcFileName[i]) {
+        if  (ifcFileName[i++] == '\\') {
+            j = i;
+        }
+    }
+
+    SetSPFFHeader(
+            description,                        //  description
+            "2;1",                              //  implementationLevel
+            &ifcFileName[j],                    //  name
+            timeStamp,							//  timeStamp
+            "Architect",                        //  author
+            "Building Designer Office",         //  organization
+            "IFC Engine DLL version 1.02 beta", //  preprocessorVersion
+            "IFC Engine DLL version 1.02 beta", //  originatingSystem
+            "The authorising person",           //  authorization
+            "IFC2X3"                            //  fileSchema
+        );
+
+    if  (saveIfx) {
+        saveIfcFileAsXml(ifcFileName);
+    } else {
+        saveIfcFile(ifcFileName);
+    }
+}
 
 
 bool IFCBuilder::createIfcFile(char * ifcSchemaName, bool objectsWillBeAdded)
@@ -312,7 +342,7 @@ int	IFCBuilder::getOrganizationInstance()
 
 int	IFCBuilder::buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix)
 {
-	int		ifcAxis2Placement3DInstance;
+	int ifcAxis2Placement3DInstance;
 
 	ifcAxis2Placement3DInstance = sdaiCreateInstanceBN(model, "IFCAXIS2PLACEMENT3D");
 
@@ -325,7 +355,7 @@ int	IFCBuilder::buildAxis2Placement3DInstance(transformationMatrixStruct * pMatr
 
 int	IFCBuilder::buildCartesianPointInstance(point3DStruct * pPoint)
 {
-	int		ifcCartesianPointInstance, * aggrCoordinates;
+	int ifcCartesianPointInstance, * aggrCoordinates;
 
 	ifcCartesianPointInstance = sdaiCreateInstanceBN(model, "IFCCARTESIANPOINT");
 
@@ -339,7 +369,7 @@ int	IFCBuilder::buildCartesianPointInstance(point3DStruct * pPoint)
 
 int	IFCBuilder::buildDirectionInstance(point3DStruct * pPoint)
 {
-	int		ifcDirectionInstance, * aggrDirectionRatios;
+	int ifcDirectionInstance, * aggrDirectionRatios;
 	double	_null = 0, _one = 1;
 
 	ifcDirectionInstance = sdaiCreateInstanceBN(model, "IFCDIRECTION");
@@ -354,7 +384,7 @@ int	IFCBuilder::buildDirectionInstance(point3DStruct * pPoint)
 
 int	IFCBuilder::buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo)
 {
-	int		ifcLocalPlacementInstance;
+	int ifcLocalPlacementInstance;
 
 	ifcLocalPlacementInstance = sdaiCreateInstanceBN(model, "IFCLOCALPLACEMENT");
 
@@ -415,7 +445,7 @@ int	IFCBuilder::getDimensionalExponentsInstance()
 
 int	IFCBuilder::buildMeasureWithUnitInstance()
 {
-	int		ifcMeasureWithUnitInstance;
+	int ifcMeasureWithUnitInstance;
 	void	* valueComponentADB;
 	double	valueComponent= 0.01745;
 
@@ -432,7 +462,7 @@ int	IFCBuilder::buildMeasureWithUnitInstance()
 
 int	IFCBuilder::buildSIUnitInstance(char * UnitType, char * Prefix, char * Name)
 {
-	int		ifcSIUnitInstance;
+	int ifcSIUnitInstance;
 
 	ifcSIUnitInstance = sdaiCreateInstanceBN(model, "IFCSIUNIT");
 
@@ -478,7 +508,7 @@ int	IFCBuilder::getUnitAssignmentInstance()
 
 int	IFCBuilder::buildRelAggregatesInstance(char * name, char * description, int ifcRelatingObjectInstance, int ifcRelatedObjectInstance)
 {
-	int		ifcRelAggregatesInstance, * aggrRelatedObjects;
+	int ifcRelAggregatesInstance, * aggrRelatedObjects;
 
 	ifcRelAggregatesInstance = sdaiCreateInstanceBN(model, "IFCRELAGGREGATES");
 
@@ -495,7 +525,7 @@ int	IFCBuilder::buildRelAggregatesInstance(char * name, char * description, int 
 
 int	IFCBuilder::buildRelContainedInSpatialStructureInstance(char * name, char * description, int ifcRelatingStructureInstance, int ** aggrRelatedElements)
 {
-	int		ifcRelContainedInSpatialStructureInstance;
+	int ifcRelContainedInSpatialStructureInstance;
 
 	ifcRelContainedInSpatialStructureInstance = sdaiCreateInstanceBN(model, "IFCRELCONTAINEDINSPATIALSTRUCTURE");
 
@@ -537,7 +567,7 @@ int	IFCBuilder::getProjectInstance()
 
 int	IFCBuilder::buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcSiteInstancePlacement)
 {
-	int		ifcSiteInstance, * aggrRefLatitude, * aggrRefLongitude,
+	int ifcSiteInstance, * aggrRefLatitude, * aggrRefLongitude,
 			refLat_x = 24, refLat_y = 28, refLat_z = 0, refLong_x = 54, refLong_y = 25, refLong_z = 0;
 
 	ifcSiteInstance = sdaiCreateInstanceBN(model, "IFCSITE");
@@ -565,9 +595,9 @@ int	IFCBuilder::buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcP
 }
 
 
-int	IFCBuilder::buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingInstancePlacement)
+int	IFCBuilder::buildBuildingInstance(transformationMatrixStruct* pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingInstancePlacement)
 {
-	int		ifcBuildingInstance;
+	int ifcBuildingInstance;
 
 	ifcBuildingInstance = sdaiCreateInstanceBN(model, "IFCBUILDING");
 
@@ -614,7 +644,7 @@ int	IFCBuilder::buildBuildingInstance(transformationMatrixStruct * pMatrix, int 
 
 int	IFCBuilder::buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingStoreyInstancePlacement)
 {
-	int		ifcBuildingStoreyInstance;
+	int ifcBuildingStoreyInstance;
 	double	elevation = 0;
 
 	ifcBuildingStoreyInstance = sdaiCreateInstanceBN(model, "IFCBUILDINGSTOREY");
@@ -819,3 +849,29 @@ int IFCBuilder::getGeometricRepresentationContextInstance()
 
     return  ifcGeometricRepresentationContextInstance;
 }
+
+// helper function extracted from miniExampleDlg --Andreas
+void IFCBuilder::genIfcTimestamp(char *timeStamp) {
+	 
+	time_t t;
+    struct tm * tInfo;
+
+    time ( &t );
+    tInfo = localtime ( &t );
+
+	itoa(1900 + tInfo->tm_year, &timeStamp[0], 10);
+    itoa(100 + 1 + tInfo->tm_mon, &timeStamp[4], 10);
+    itoa(100 + tInfo->tm_mday, &timeStamp[7], 10);
+    timeStamp[4] = '-';
+    timeStamp[7] = '-';
+    itoa(100 + tInfo->tm_hour, &timeStamp[10], 10);
+    itoa(100 + tInfo->tm_min, &timeStamp[13], 10);
+    itoa(100 + tInfo->tm_sec, &timeStamp[16], 10);
+    timeStamp[10] = 'T';
+    timeStamp[13] = ':';
+    timeStamp[16] = ':';
+    timeStamp[19] = 0;
+        
+    //int hour = tm.tm_hour();
+}
+

@@ -16,6 +16,7 @@
 
 
 #include "stdafx.h"
+#include "baseIfc.h"
 #include "boundingBoxIfc.h"
 
 extern  int     model;
@@ -26,7 +27,7 @@ extern  int     * aggrRelatedElements,
 extern  int     ifcBuildingStoreyInstancePlacement;
 
 
-void    createIfcBoundingBoxShape(double width, double thickness, double height, char * representationIdentifier)
+void    IFCBuilder::createIfcBoundingBoxShape(double width, double thickness, double height, char * representationIdentifier)
 {
     sdaiAppend((int) aggrRepresentations, sdaiINSTANCE, (void*) buildShapeRepresentationInstance(width, thickness, height, representationIdentifier));
 }
@@ -39,7 +40,7 @@ void    createIfcBoundingBoxShape(double width, double thickness, double height,
 //
 
 
-int		buildBoundingBoxInstance(double width, double thickness, double height)
+int		IFCBuilder::buildBoundingBoxInstance(double width, double thickness, double height)
 {
 	int		ifcBoundingBoxInstance;
 
@@ -53,7 +54,7 @@ int		buildBoundingBoxInstance(double width, double thickness, double height)
 	return	ifcBoundingBoxInstance;
 }
 
-int		buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier)
+int		IFCBuilder::buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier)
 {
 	int		ifcShapeRepresentationInstance, * aggrItems;
 
@@ -77,7 +78,7 @@ int		buildShapeRepresentationInstance(double width, double thickness, double hei
 
 
 
-int		buildCartesianPointInstance(double x, double y, double z)
+int		IFCBuilder::buildCartesianPointInstance(double x, double y, double z)
 {
 	int		ifcCartesianPointInstance, * aggrCoordinates;
 

@@ -29,21 +29,20 @@
 #include "stdafx.h"
 #include <iostream>
 #include "IFCExport.h"
-#include "baseIfc.h"
 
 
 IFCExport::IFCExport() {
-	baseIFC = new BaseIFC(); 
+	builder = new IFCBuilder(); 
 	saveIfx = false;
 }
 
 // based on CMiniExampleDlg::OnOK() --Andreas
 void IFCExport::export_ifc() 
 {
-    char ifcFileName[] = "building.ifc", 
+    char ifcFileName[] = "building_test.ifc", 
 		ifcSchemaName[] = "IFC2X3_Final.exp";
 
-    if  (!baseIFC->createIfcFile(ifcSchemaName, false)) 
+    if  (!builder->createIfcFile(ifcSchemaName, false)) 
 	{
         std::cout << ("IFC Model could not be instantiated, probably it cannot find the schema file.");
     }
@@ -61,7 +60,7 @@ void IFCExport::export_ifc()
         memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
     }
 
-	this->genTimestamp(timeStamp);
+	builder->genIfcTimestamp(timeStamp);
 
     int i = 0, j = 0;
     while  (ifcFileName[i]) {
@@ -84,35 +83,10 @@ void IFCExport::export_ifc()
         );
 
     if  (saveIfx) {
-        baseIFC->saveIfcFileAsXml(ifcFileName);
+        builder->saveIfcFileAsXml(ifcFileName);
     } else {
-        baseIFC->saveIfcFile(ifcFileName);
+        builder->saveIfcFile(ifcFileName);
     }
-}
-
-// helper function from miniExampleDlg --Andreas
-void IFCExport::genTimestamp(char *timeStamp) {
-	 
-	time_t t;
-    struct tm * tInfo;
-
-    time ( &t );
-    tInfo = localtime ( &t );
-
-	itoa(1900 + tInfo->tm_year, &timeStamp[0], 10);
-    itoa(100 + 1 + tInfo->tm_mon, &timeStamp[4], 10);
-    itoa(100 + tInfo->tm_mday, &timeStamp[7], 10);
-    timeStamp[4] = '-';
-    timeStamp[7] = '-';
-    itoa(100 + tInfo->tm_hour, &timeStamp[10], 10);
-    itoa(100 + tInfo->tm_min, &timeStamp[13], 10);
-    itoa(100 + tInfo->tm_sec, &timeStamp[16], 10);
-    timeStamp[10] = 'T';
-    timeStamp[13] = ':';
-    timeStamp[16] = ':';
-    timeStamp[19] = 0;
-        
-    //int hour = tm.tm_hour();
 }
 
 

@@ -14,23 +14,11 @@
 //  see other examples or contact:  pim.vandenhelm@tno.nl
 ////////////////////////////////////////////////////////////////////////
 
-
 #include "stdafx.h"
-#include "baseIfcObject.h"
+#include "baseIfc.h"
 
-extern  int     model;
 
-extern  int     * aggrRelatedElements;
-
-extern  int     ifcBuildingInstancePlacement,
-                ifcBuildingStoreyInstancePlacement;
-
-int        * aggrRepresentations;
-
-int         ifcOpeningElementInstancePlacement,
-            ifcWallInstancePlacement;
-
-int		createIfcWall(char * pWallName, double xOffset, double yOffset, double zOffset)
+int	IFCBuilder::createIfcWall(char* pWallName, double xOffset, double yOffset, double zOffset)
 {
     transformationMatrixStruct  matrix;
     int ifcWallInstance;
@@ -49,7 +37,7 @@ int		createIfcWall(char * pWallName, double xOffset, double yOffset, double zOff
 	return	ifcWallInstance;
 }
 
-int		createIfcWallStandardCase(char * pWallName, double xOffset, double yOffset, double zOffset)
+int	IFCBuilder::createIfcWallStandardCase(char* pWallName, double xOffset, double yOffset, double zOffset)
 {
     transformationMatrixStruct  matrix;
     int ifcWallStandardCaseInstance;
@@ -68,7 +56,7 @@ int		createIfcWallStandardCase(char * pWallName, double xOffset, double yOffset,
 	return	ifcWallStandardCaseInstance;
 }
 
-int		createIfcOpeningElement(char * pOpeningElementName, double xOffset, double yOffset, double zOffset)
+int	IFCBuilder::createIfcOpeningElement(char* pOpeningElementName, double xOffset, double yOffset, double zOffset)
 {
     transformationMatrixStruct  matrix;
     int ifcOpeningElementInstance;
@@ -86,7 +74,7 @@ int		createIfcOpeningElement(char * pOpeningElementName, double xOffset, double 
 	return	ifcOpeningElementInstance;
 }
 
-int		createIfcWindow(char * pWindowName, double xOffset, double yOffset, double zOffset)
+int	IFCBuilder::createIfcWindow(char* pWindowName, double xOffset, double yOffset, double zOffset)
 {
     transformationMatrixStruct  matrix;
     int ifcWindowInstance, ifcWindowInstancePlacement;
@@ -113,9 +101,9 @@ int		createIfcWindow(char * pWindowName, double xOffset, double yOffset, double 
 //
 
 
-int		buildProductDefinitionShapeInstance()
+int	IFCBuilder::buildProductDefinitionShapeInstance()
 {
-	int		ifcProductDefinitionShapeInstance;
+	int ifcProductDefinitionShapeInstance;
 
 	ifcProductDefinitionShapeInstance = sdaiCreateInstanceBN(model, "IFCPRODUCTDEFINITIONSHAPE");
 
@@ -132,9 +120,9 @@ int		buildProductDefinitionShapeInstance()
 //
 
 
-int		buildWallInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWallInstancePlacement, char * pWallName)
+int	IFCBuilder::buildWallInstance(transformationMatrixStruct* pMatrix, int ifcPlacementRelativeTo, int* ifcWallInstancePlacement, char* pWallName)
 {
-	int		ifcWallInstance = sdaiCreateInstanceBN(model, "IFCWALL");
+	int ifcWallInstance = sdaiCreateInstanceBN(model, "IFCWALL");
 
 	sdaiPutAttrBN(ifcWallInstance, "GlobalId", sdaiSTRING, (void*) CreateCompressedGuidString());
 	sdaiPutAttrBN(ifcWallInstance, "OwnerHistory", sdaiINSTANCE, (void*) getOwnerHistoryInstance());
@@ -148,9 +136,9 @@ int		buildWallInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRel
 	return	ifcWallInstance;
 }
 
-int		buildWallStandardCaseInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWallInstancePlacement, char * pWallName)
+int	IFCBuilder::buildWallStandardCaseInstance(transformationMatrixStruct* pMatrix, int ifcPlacementRelativeTo, int* ifcWallInstancePlacement, char* pWallName)
 {
-	int		ifcWallInstance = sdaiCreateInstanceBN(model, "IFCWALLSTANDARDCASE");
+	int ifcWallInstance = sdaiCreateInstanceBN(model, "IFCWALLSTANDARDCASE");
 
 	sdaiPutAttrBN(ifcWallInstance, "GlobalId", sdaiSTRING, (void*) CreateCompressedGuidString());
 	sdaiPutAttrBN(ifcWallInstance, "OwnerHistory", sdaiINSTANCE, (void*) getOwnerHistoryInstance());
@@ -164,12 +152,12 @@ int		buildWallStandardCaseInstance(transformationMatrixStruct * pMatrix, int ifc
 	return	ifcWallInstance;
 }
 
-int		buildOpeningElementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcOpeningElementInstancePlacement, char * pOpeningElementName)
+int	IFCBuilder::buildOpeningElementInstance(transformationMatrixStruct* pMatrix, int ifcPlacementRelativeTo, int* ifcOpeningElementInstancePlacement, char* pOpeningElementName)
 {
 	return	0;
 }
 
-int		buildWindowInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWindowInstancePlacement, char * pWindowName)
+int	IFCBuilder::buildWindowInstance(transformationMatrixStruct* pMatrix, int ifcPlacementRelativeTo, int* ifcWindowInstancePlacement, char* pWindowName)
 {
 	return	0;
 }
@@ -182,9 +170,9 @@ int		buildWindowInstance(transformationMatrixStruct * pMatrix, int ifcPlacementR
 //
 
 
-int		buildRelVoidsElementInstance(int ifcBuildingElementInstance, int ifcOpeningElementInstance)
+int	IFCBuilder::buildRelVoidsElementInstance(int ifcBuildingElementInstance, int ifcOpeningElementInstance)
 {
-	int		ifcRelVoidsElementInstance;
+	int ifcRelVoidsElementInstance;
 
 	ifcRelVoidsElementInstance = sdaiCreateInstanceBN(model, "IFCRELVOIDSELEMENT");
 
@@ -197,9 +185,9 @@ int		buildRelVoidsElementInstance(int ifcBuildingElementInstance, int ifcOpening
 	return	ifcRelVoidsElementInstance;
 }
 
-int     buildRelFillsElementInstance(int ifcOpeningElementInstance, int ifcBuildingElementInstance)
+int IFCBuilder::buildRelFillsElementInstance(int ifcOpeningElementInstance, int ifcBuildingElementInstance)
 {
-	int		ifcRelFillsElementInstance;
+	int ifcRelFillsElementInstance;
 
 	ifcRelFillsElementInstance = sdaiCreateInstanceBN(model, "IFCRELFILLSELEMENT");
 
@@ -220,9 +208,9 @@ int     buildRelFillsElementInstance(int ifcOpeningElementInstance, int ifcBuild
 //
 
 
-int		buildRelAssociatesMaterial(int ifcBuildingElementInstance, double thickness)
+int	IFCBuilder::buildRelAssociatesMaterial(int ifcBuildingElementInstance, double thickness)
 {
-	int		ifcRelAssociatesMaterialInstance, * aggrRelatedObjects;
+	int ifcRelAssociatesMaterialInstance,* aggrRelatedObjects;
 
 	ifcRelAssociatesMaterialInstance = sdaiCreateInstanceBN(model, "IFCRELASSOCIATESMATERIAL");
 
@@ -236,9 +224,9 @@ int		buildRelAssociatesMaterial(int ifcBuildingElementInstance, double thickness
 	return	ifcRelAssociatesMaterialInstance;
 }
 
-int     buildMaterialLayerSetUsage(double thickness)
+int IFCBuilder::buildMaterialLayerSetUsage(double thickness)
 {
-	int		ifcMaterialLayerSetUsageInstance;
+	int ifcMaterialLayerSetUsageInstance;
     double  offsetFromReferenceLine = -thickness/2;
 
 	ifcMaterialLayerSetUsageInstance = sdaiCreateInstanceBN(model, "IFCMATERIALLAYERSETUSAGE");
@@ -251,9 +239,9 @@ int     buildMaterialLayerSetUsage(double thickness)
     return  ifcMaterialLayerSetUsageInstance;
 }
 
-int     buildMaterialLayerSet(double thickness)
+int IFCBuilder::buildMaterialLayerSet(double thickness)
 {
-	int		ifcMaterialLayerSetInstance, * aggrMaterialLayers;
+	int ifcMaterialLayerSetInstance,* aggrMaterialLayers;
 
 	ifcMaterialLayerSetInstance = sdaiCreateInstanceBN(model, "IFCMATERIALLAYERSET");
 
@@ -263,9 +251,9 @@ int     buildMaterialLayerSet(double thickness)
     return  ifcMaterialLayerSetInstance;
 }
 
-int     buildMaterialLayer(double thickness)
+int IFCBuilder::buildMaterialLayer(double thickness)
 {
-	int		ifcMaterialLayerInstance;
+	int	ifcMaterialLayerInstance;
 
 	ifcMaterialLayerInstance = sdaiCreateInstanceBN(model, "IFCMATERIALLAYER");
 
@@ -275,9 +263,9 @@ int     buildMaterialLayer(double thickness)
     return  ifcMaterialLayerInstance;
 }
 
-int     buildMaterial()
+int IFCBuilder::buildMaterial()
 {
-	int		ifcMaterialInstance;
+	int	ifcMaterialInstance;
 
 	ifcMaterialInstance = sdaiCreateInstanceBN(model, "IFCMATERIAL");
 
