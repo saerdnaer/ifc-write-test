@@ -14,9 +14,7 @@
 //  see other examples or contact:  pim.vandenhelm@tno.nl
 ////////////////////////////////////////////////////////////////////////
 
-
-#include "baseIfc.h"
-
+#include "IFCBuilder.h"
 
 extern  int     model;
 

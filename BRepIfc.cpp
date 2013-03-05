@@ -16,7 +16,7 @@
 
 
 #include "stdafx.h"
-#include "baseIfc.h"
+#include "IFCBuilder.h"
 
 
 void IFCBuilder::createIfcBRepShape(shellStruct* pShell)

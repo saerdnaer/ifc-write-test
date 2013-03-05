@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "baseIfc.h"
+#include "IFCBuilder.h"
 
 
 int	IFCBuilder::createIfcWall(char* pWallName, Point3d offset)

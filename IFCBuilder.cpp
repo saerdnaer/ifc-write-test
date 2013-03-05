@@ -27,7 +27,7 @@
 
 #include "stdafx.h"
 #include <iostream>
-#include "baseIfc.h"
+#include "IFCBuilder.h"
 
 IFCBuilder::IFCBuilder() {
 	model = 0; 

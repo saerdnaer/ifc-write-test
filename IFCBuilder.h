@@ -25,6 +25,7 @@
 
 #define     COORDINATIONVIEW    0
 #define     PRESENTATIONVIEW    1
+#define 	NULL 0
 
 static const char *cConversionTable64 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_$";
 

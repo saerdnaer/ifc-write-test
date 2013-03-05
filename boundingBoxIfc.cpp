@@ -26,7 +26,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 
-#include "baseIfc.h"
+#include "IFCBuilder.h"
 
 /*
 extern  int     * aggrRelatedElements,
