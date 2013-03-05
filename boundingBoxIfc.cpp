@@ -40,9 +40,9 @@ void    IFCBuilder::createIfcBoundingBoxShape(double width, double thickness, do
 //
 
 
-int		IFCBuilder::buildBoundingBoxInstance(double width, double thickness, double height)
+int ifcBuilder::buildBoundingBoxInstance(double width, double thickness, double height)
 {
-	int		ifcBoundingBoxInstance;
+	int ifcBoundingBoxInstance;
 
 	ifcBoundingBoxInstance = sdaiCreateInstanceBN(model, "IFCBOUNDINGBOX");
 
@@ -54,9 +54,9 @@ int		IFCBuilder::buildBoundingBoxInstance(double width, double thickness, double
 	return	ifcBoundingBoxInstance;
 }
 
-int		IFCBuilder::buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier)
+int ifcBuilder::buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier)
 {
-	int		ifcShapeRepresentationInstance, * aggrItems;
+	int ifcShapeRepresentationInstance, * aggrItems;
 
 	ifcShapeRepresentationInstance = sdaiCreateInstanceBN(model, "IFCSHAPEREPRESENTATION");
 
@@ -78,9 +78,9 @@ int		IFCBuilder::buildShapeRepresentationInstance(double width, double thickness
 
 
 
-int		IFCBuilder::buildCartesianPointInstance(double x, double y, double z)
+int ifcBuilder::buildCartesianPointInstance(double x, double y, double z)
 {
-	int		ifcCartesianPointInstance, * aggrCoordinates;
+	int ifcCartesianPointInstance, * aggrCoordinates;
 
 	ifcCartesianPointInstance = sdaiCreateInstanceBN(model, "IFCCARTESIANPOINT");
 

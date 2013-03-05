@@ -42,9 +42,9 @@ void IFCBuilder::createIfcPolylineShape(double p0x, double p0y, double p1x, doub
 //
 
 
-int	IFCBuilder::buildShapeRepresentationInstance(polygon2DStruct * pPolygon, double depth)
+int IFCBuilder::buildShapeRepresentationInstance(polygon2DStruct * pPolygon, double depth)
 {
-	int		ifcShapeRepresentationInstance, * aggrItems;
+	int ifcShapeRepresentationInstance, * aggrItems;
 
 	ifcShapeRepresentationInstance = sdaiCreateInstanceBN(model, "IFCSHAPEREPRESENTATION");
 
@@ -58,9 +58,9 @@ int	IFCBuilder::buildShapeRepresentationInstance(polygon2DStruct * pPolygon, dou
 	return	ifcShapeRepresentationInstance;
 }
 
-int	IFCBuilder::buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double p1y)
+int IFCBuilder::buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double p1y)
 {
-	int		ifcShapeRepresentationInstance, * aggrItems;
+	int ifcShapeRepresentationInstance, * aggrItems;
 
 	ifcShapeRepresentationInstance = sdaiCreateInstanceBN(model, "IFCSHAPEREPRESENTATION");
 
@@ -82,9 +82,9 @@ int	IFCBuilder::buildShapeRepresentationInstance(double p0x, double p0y, double 
 //
 
 
-int	IFCBuilder::buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygon)
+int IFCBuilder::buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygon)
 {
-	int		ifcArbitraryClosedProfileDefInstance;
+	int ifcArbitraryClosedProfileDefInstance;
 
 	ifcArbitraryClosedProfileDefInstance = sdaiCreateInstanceBN(model, "IFCARBITRARYCLOSEDPROFILEDEF");
 
@@ -94,9 +94,9 @@ int	IFCBuilder::buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygo
 	return	ifcArbitraryClosedProfileDefInstance;
 }
 
-int	IFCBuilder::buildCartesianPointInstance(double x, double y)
+int IFCBuilder::buildCartesianPointInstance(double x, double y)
 {
-	int		ifcCartesianPointInstance, * aggrCoordinates;
+	int ifcCartesianPointInstance, * aggrCoordinates;
 
 	ifcCartesianPointInstance = sdaiCreateInstanceBN(model, "IFCCARTESIANPOINT");
 
@@ -107,10 +107,10 @@ int	IFCBuilder::buildCartesianPointInstance(double x, double y)
 	return	ifcCartesianPointInstance;
 }
 
-int	IFCBuilder::buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, double depth)
+int IFCBuilder::buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, double depth)
 {
 	transformationMatrixStruct  matrix;
-	int		ifcExtrudedAreaSolidInstance;
+	int ifcExtrudedAreaSolidInstance;
 
 	IFCBuilder::identityMatrix(&matrix);
 
@@ -124,9 +124,9 @@ int	IFCBuilder::buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, doubl
 	return	ifcExtrudedAreaSolidInstance;
 }
 
-int	IFCBuilder::buildPolylineInstance(polygon2DStruct * pPolygon)
+int IFCBuilder::buildPolylineInstance(polygon2DStruct * pPolygon)
 {
-	int		ifcPolylineInstance, * aggrPoints;
+	int ifcPolylineInstance, * aggrPoints;
 
 	ifcPolylineInstance = sdaiCreateInstanceBN(model, "IFCPOLYLINE");
 
@@ -145,7 +145,7 @@ int	IFCBuilder::buildPolylineInstance(polygon2DStruct * pPolygon)
 
 int IFCBuilder::buildPolylineInstance(double p0x, double p0y, double p1x, double p1y)
 {
-	int		ifcPolylineInstance, * aggrPoints;
+	int ifcPolylineInstance, * aggrPoints;
 
 	ifcPolylineInstance = sdaiCreateInstanceBN(model, "IFCPOLYLINE");
 
