@@ -18,7 +18,7 @@
 #include "IFCBuilder.h"
 
 
-int	IFCBuilder::createIfcWall(char* pWallName, Point3d offset)
+int	IFCBuilder::createIfcWall(char* pWallName, double xOffset, double yOffset, double zOffset)
 {
     transformationMatrixStruct  matrix;
     int ifcWallInstance;
