@@ -1,3 +1,14 @@
+/*
+ * Adapted for CDP: Andreas Hubel (andreas.hubel@tum.de)
+ *
+ * This class tries to wrap the TNO ifc dll, for usage with CDP data structures
+ * It's based on an C/C++ example available from TNO. This example is more C than 
+ * C++, so be aware of dragons ahead! 
+ *
+ *
+ * Now follows the orginal file header
+ */
+
 ////////////////////////////////////////////////////////////////////////
 //  Author:  Peter Bonsma
 //  Date:    11 July 2008
@@ -15,17 +26,14 @@
 ////////////////////////////////////////////////////////////////////////
 
 
-#include "stdafx.h"
 #include "baseIfc.h"
-#include "boundingBoxIfc.h"
 
-extern  int     model;
-
+/*
 extern  int     * aggrRelatedElements,
                 * aggrRepresentations;
 
 extern  int     ifcBuildingStoreyInstancePlacement;
-
+*/
 
 void    IFCBuilder::createIfcBoundingBoxShape(double width, double thickness, double height, char * representationIdentifier)
 {
@@ -40,7 +48,7 @@ void    IFCBuilder::createIfcBoundingBoxShape(double width, double thickness, do
 //
 
 
-int ifcBuilder::buildBoundingBoxInstance(double width, double thickness, double height)
+int IFCBuilder::buildBoundingBoxInstance(double width, double thickness, double height)
 {
 	int ifcBoundingBoxInstance;
 
@@ -54,7 +62,7 @@ int ifcBuilder::buildBoundingBoxInstance(double width, double thickness, double 
 	return	ifcBoundingBoxInstance;
 }
 
-int ifcBuilder::buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier)
+int IFCBuilder::buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier)
 {
 	int ifcShapeRepresentationInstance, * aggrItems;
 
@@ -78,7 +86,7 @@ int ifcBuilder::buildShapeRepresentationInstance(double width, double thickness,
 
 
 
-int ifcBuilder::buildCartesianPointInstance(double x, double y, double z)
+int IFCBuilder::buildCartesianPointInstance(double x, double y, double z)
 {
 	int ifcCartesianPointInstance, * aggrCoordinates;
 

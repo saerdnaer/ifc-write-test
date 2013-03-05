@@ -60,6 +60,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\cdp\src\ObjectRecognition\obj_reconstructor\Point3d.cpp" />
     <ClCompile Include="..\baseIfc.cpp" />
     <ClCompile Include="..\baseIfcObject.cpp" />
     <ClCompile Include="..\boundingBoxIfc.cpp" />
@@ -68,6 +69,7 @@
     <ClCompile Include="..\IFCExport.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\cdp\src\ObjectRecognition\obj_reconstructor\Point3d.h" />
     <ClInclude Include="..\baseIfc.h" />
     <ClInclude Include="..\IFCEngine.h" />
     <ClInclude Include="..\IFCExport.h" />

@@ -18,7 +18,7 @@
 #include "baseIfc.h"
 
 
-int	IFCBuilder::createIfcWall(char* pWallName, double xOffset, double yOffset, double zOffset)
+int	IFCBuilder::createIfcWall(char* pWallName, Point3d offset)
 {
     transformationMatrixStruct  matrix;
     int ifcWallInstance;
@@ -28,9 +28,7 @@ int	IFCBuilder::createIfcWall(char* pWallName, double xOffset, double yOffset, d
     matrix._42 = yOffset;
     matrix._43 = zOffset;
 
-    //
-    //      Build Wall and add it to the BuildingStorey
-    //
+    // Build Wall and add it to the BuildingStorey
     ifcWallInstance = buildWallInstance(&matrix, ifcBuildingStoreyInstancePlacement, &ifcWallInstancePlacement, pWallName);
 	sdaiAppend((int) aggrRelatedElements, sdaiINSTANCE, (void *) ifcWallInstance);
 
@@ -47,9 +45,7 @@ int	IFCBuilder::createIfcWallStandardCase(char* pWallName, double xOffset, doubl
     matrix._42 = yOffset;
     matrix._43 = zOffset;
 
-    //
-    //      Build Wall and add it to the BuildingStorey
-    //
+    // Build Wall and add it to the BuildingStorey
     ifcWallStandardCaseInstance = buildWallStandardCaseInstance(&matrix, ifcBuildingStoreyInstancePlacement, &ifcWallInstancePlacement, pWallName);
 	sdaiAppend((int) aggrRelatedElements, sdaiINSTANCE, (void *) ifcWallStandardCaseInstance);
 

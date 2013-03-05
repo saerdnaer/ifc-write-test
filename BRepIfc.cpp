@@ -19,7 +19,7 @@
 #include "baseIfc.h"
 
 
-void    IFCBuilder::createIfcBRepShape(shellStruct* pShell)
+void IFCBuilder::createIfcBRepShape(shellStruct* pShell)
 {
        sdaiAppend((int) aggrRepresentations, sdaiINSTANCE, (void*) buildShapeRepresentationInstance(pShell));
 }

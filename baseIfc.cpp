@@ -1,3 +1,14 @@
+/*
+ * Adapted for CDP: Andreas Hubel (andreas.hubel@tum.de)
+ *
+ * This class tries to wrap the TNO ifc dll, for usage with CDP data structures
+ * It's based on an C/C++ example available from TNO. This example is more C than 
+ * C++, so be aware of dragons ahead! 
+ *
+ *
+ * Now follows the orginal file header
+ */
+
 ////////////////////////////////////////////////////////////////////////
 //  Author:  Peter Bonsma
 //  Date:    11 July 2008
@@ -122,32 +133,15 @@ bool IFCBuilder::createIfcFile(char * ifcSchemaName, bool objectsWillBeAdded)
     return  true;
 }
 
+//  Save the created configuration
 bool IFCBuilder::saveIfcFile(char * ifcFileName)
 {
-    if	(model) {
-        //
-        //  Save the created configuration
-        //
-        sdaiSaveModelBN(model, ifcFileName);
-
-        return  true;
-    } else {
-        return  false;
-    }
+	sdaiSaveModelBN(model, ifcFileName);
 }
 
 bool IFCBuilder::saveIfcFileAsXml(char * ifcFileName)
 {
-    if	(model) {
-        //
-        //  Save the created configuration
-        //
-        sdaiSaveModelAsXmlBN(model, ifcFileName);
-
-        return  true;
-    } else {
-        return  false;
-    }
+	sdaiSaveModelAsXmlBN(model, ifcFileName);
 }
 
 void IFCBuilder::identityMatrix(transformationMatrixStruct * pMatrix)
@@ -478,7 +472,7 @@ int	IFCBuilder::buildSIUnitInstance(char * UnitType, char * Prefix, char * Name)
 
 int	IFCBuilder::getUnitAssignmentInstance()
 {
-	int		* aggrUnits;
+	int	* aggrUnits;
 
 	if	(!ifcUnitAssignmentInstance) {
 		ifcUnitAssignmentInstance = sdaiCreateInstanceBN(model, "IFCUNITASSIGNMENT");

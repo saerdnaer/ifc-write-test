@@ -21,6 +21,7 @@
 
 #include "stdafx.h"
 #include "IFCEngine.h"
+#include "Point3d.h"
 
 #define     COORDINATIONVIEW    0
 #define     PRESENTATIONVIEW    1

@@ -4,8 +4,8 @@
  * This class tries to wrap the TNO ifc dll, for usage with CDP data structures
  * It's based on an C/C++ example available from TNO. This example is more C than 
  * C++, so be aware of dragons ahead! 
- * The code 
- 
+ *
+ *
  * Now follows the orginal file header
  */
 

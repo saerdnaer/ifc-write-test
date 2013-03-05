@@ -15,8 +15,8 @@
 ////////////////////////////////////////////////////////////////////////
 
 
-#include "stdafx.h"
-#include "extrudedPolygonIfc.h"
+#include "baseIfc.h"
+
 
 extern  int     model;
 

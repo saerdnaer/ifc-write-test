@@ -11,23 +11,6 @@
 //  see other examples or contact:  pim.vandenhelm@tno.nl
 ////////////////////////////////////////////////////////////////////////
 
-/* disable the merging functionality by removing the */ 
-/* _MERGING macro from the compiler options */
-#ifndef _MERGING
-#define _MERGING
-#endif
-
-#if !defined(AFX_IFCENGINE_H__E61DCDC8_CF8E_48DD_A8A3_C62AB6E95095__INCLUDED_)
-#define AFX_IFCENGINE_H__E61DCDC8_CF8E_48DD_A8A3_C62AB6E95095__INCLUDED_
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
-//#ifndef __AFXWIN_H__
-//	#error include 'stdafx.h' before including this file for PCH
-//#endif
-
 #ifdef __cplusplus
     extern "C" {
 #endif
