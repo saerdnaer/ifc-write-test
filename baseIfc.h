@@ -127,15 +127,7 @@ public:
 	static void	identityPoint(point3DStruct * pPoint);
 	int		* getTimeStamp();
 
-
-	//
-	//
 	//	GUID
-	//
-	//
-
-
-
 	char * CreateCompressedGuidString();
 	char * getString64FromGuid(const GUID *pGuid, char * buf);
 	BOOL cv_to_64(const unsigned long number, char *code, int len);
@@ -145,78 +137,39 @@ public:
 	bool    saveIfcFile(char * ifcFileName);
 	bool    saveIfcFileAsXml(char * ifcFileName);
 
-
-	//
-	//
 	//		Application, Organization, Person (OwnerHistory, PersonAndOrganization)
-	//
-	//
-
-
 	int		getApplicationInstance();
 	int		getOrganizationInstance();
 	int		getOwnerHistoryInstance();
 	int		getPersonAndOrganizationInstance();
 	int		getPersonInstance();
 
-
-	//
-	//
 	//		CartesianPoint, Direction, LocalPlacement (Axis2Placement)
-	//
-	//
-
-
 	int		buildAxis2Placement3DInstance(transformationMatrixStruct * pMatrix);
 	int		buildCartesianPointInstance(point3DStruct * pPoint);
 	int		buildDirectionInstance(point3DStruct * pPoint);
 	int		buildLocalPlacementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo);
 
-
-	//
-	//
 	//		ConversionBasedUnit, DimensionalExponents, MeasureWithUnit, SIUnit, UnitAssignment
-	//
-	//
-
-
 	int		getConversionBasedUnitInstance();
 	int		getDimensionalExponentsInstance();
 	int		buildMeasureWithUnitInstance();
 	int		buildSIUnitInstance(char * UnitType, char * Prefix, char * Name);
 	int		getUnitAssignmentInstance();
 
-	
-	//
-	//
 	//		RelAggregates, RelContainedInSpatialStructure
-	//
-	//
-
-
 	int		buildRelAggregatesInstance(char * name, char * description, int ifcRelatingObjectInstance, int ifcRelatedObjectInstance);
 	int		buildRelContainedInSpatialStructureInstance(char * name, char * description, int ifcRelatingStructureInstance, int ** aggrRelatedElements);
 
-
-	//
-	//
 	//		Building, BuildingStorey, Project, Site
-	//
-	//
-
-
 	int		buildBuildingInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingInstancePlacement);
 	int		buildBuildingStoreyInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcBuildingStoreyInstancePlacement);
 	int		getProjectInstance();
 	int		buildSiteInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcSiteInstancePlacement);
 
 
-	//
-	//
 	// Helper functions for example data, formerly als local functions minExampleDlg.cpp 
 	// --Andreas
-	//
-	//
 	point3DStruct* create3DPoint(point3DStruct ** pPoint, double x, double y, double z);
 	polygon2DStruct* localCreatePolygonStructureForSquare(double min_x, double min_y, double max_x, double max_y);
 
@@ -226,45 +179,23 @@ public:
 	shellStruct * localCreateShellStructureForCuboidWithOpening(double min_x, double min_y, double min_z, double max_x, double max_y, double max_z, double min_x_opening, double min_z_opening, double max_x_opening, double max_z_opening);
 	
 
-
-	//
-	//
 	//		WorldCoordinateSystem, GeometricRepresentationContext
-	//
-	//
-
-
 	int     getWorldCoordinateSystemInstance();
 	int     getGeometricRepresentationContextInstance();
 
 
 // from extrudedPolygon.h
-	
 	void    createIfcExtrudedPolygonShape(polygon2DStruct * pPolygon, double depth);
 	void    createIfcPolylineShape(double p0x, double p0y, double p1x, double p1y);
 
 
-	//
-	//
 	//		ShapeRepresentation
-	//
-	//
-
-
 	int		buildShapeRepresentationInstance(polygon2DStruct * pPolygon, double depth); // from extrudedPolygon.h
 	int		buildShapeRepresentationInstance(double p0x, double p0y, double p1x, double p1y); // from extrudedPolygon.h
 	int		buildShapeRepresentationInstance(shellStruct * pShell); // from BRepIFC.h
 	int		buildShapeRepresentationInstance(double width, double thickness, double height, char * representationIdentifier); // from boundingBoxIfc.h
 
-
-
-	//
-	//
 	//		ArbitraryClosedProfileDef, CartesianPoint(2D), ExtrudedAreaSolid, Polyline
-	//
-	//
-
-
 	int		buildArbitraryClosedProfileDefInstance(polygon2DStruct * pPolygon);
 	int		buildCartesianPointInstance(double x, double y);
 	int		buildExtrudedAreaSolidInstance(polygon2DStruct * pPolygon, double depth);
@@ -275,17 +206,7 @@ public:
 
 	
 	void    createIfcBRepShape(shellStruct * pShell);
-
-
-	//
-	//
 	//		ShapeRepresentation
-	//
-	//
-
-
-
-
 
 	// helper function extracted from miniExampleDlg --Andreas
 	void genIfcTimestamp(char *timeStamp);
@@ -295,34 +216,16 @@ public:
 
 	void    createIfcBoundingBoxShape(double width, double thickness, double height, char * representationIdentifier);
 
-
-	//
-	//
 	//		BoundingBox, ShapeRepresentation
-	//
-	//
 	int		buildBoundingBoxInstance(double width, double thickness, double height); // from boundingBoxIfc.h
 
-
-	//
-	//
 	//      CartesianPoint(3D)
-	//
-	//
-
-
 	int		buildCartesianPointInstance(double x, double y, double z);
 
 // from baseIfcObject.h
 
 	
-	//
-	//
 	//      RelAssociatesMaterial, MaterialLayerSetUsage, MaterialLayerSet, MaterialLayer
-	//
-	//
-
-
 	int		buildRelAssociatesMaterial(int ifcBuildingElementInstance, double thickness);
 	int     buildMaterialLayerSetUsage(double thickness);
 	int     buildMaterialLayerSet(double thickness);
@@ -331,43 +234,21 @@ public:
 
 
 	// Elements
-
 	int		createIfcWall(char * pWallName, double xOffset, double yOffset, double zOffset);
 	int		createIfcWallStandardCase(char * pWallName, double xOffset, double yOffset, double zOffset);
 	int		createIfcOpeningElement(char * pOpeningElementName, double xOffset, double yOffset, double zOffset);
 	int		createIfcWindow(char * pWindowName, double xOffset, double yOffset, double zOffset);
 
-
-	//
-	//
 	//		ProductDefinitionShape
-	//
-	//
-
-
 	int		buildProductDefinitionShapeInstance();
 
-
-	//
-	//
 	//		IfcWall, IfcWallStandardCase, IfcOpeningElement, IfcWindow
-	//
-	//
-
-
 	int		buildWallInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWallInstancePlacement, char * pWallName);
 	int		buildWallStandardCaseInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWallInstancePlacement, char * pWallName);
 	int		buildOpeningElementInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcOpeningElementInstancePlacement, char * pOpeningElementName);
 	int		buildWindowInstance(transformationMatrixStruct * pMatrix, int ifcPlacementRelativeTo, int * ifcWindowInstancePlacement, char * pWindowName);
 
-
-	//
-	//
 	//		RelVoidsElement, RelFillsElement
-	//
-	//
-
-
 	int		buildRelVoidsElementInstance(int ifcBuildingElementInstance, int ifcOpeningElementInstance);
 	int     buildRelFillsElementInstance(int ifcOpeningElementInstance, int ifcBuildingElementInstance);
 
