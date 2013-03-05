@@ -164,12 +164,6 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <ClCompile Include="StdAfx.cpp">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="miniExample.rc">
@@ -179,10 +173,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="baseIfc.h" />
-    <ClInclude Include="baseIfcObject.h" />
-    <ClInclude Include="boundingBoxIfc.h" />
-    <ClInclude Include="BRepIfc.h" />
-    <ClInclude Include="extrudedPolygonIfc.h" />
     <ClInclude Include="IFCEngine.h" />
     <ClInclude Include="IFCExport.h" />
     <ClInclude Include="miniExample.h" />
