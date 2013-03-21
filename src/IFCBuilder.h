@@ -22,6 +22,7 @@
 #include "stdafx.h"
 #include "IFCEngine.h"
 #include "Point3d.h"
+#include "CDP_Building.hpp"
 
 #define     COORDINATIONVIEW    0
 #define     PRESENTATIONVIEW    1
@@ -121,8 +122,9 @@ private:
 
 public:
 	IFCBuilder();
-	void convert();
-
+	void addBuilding(CDP_Building building);
+	bool saveIfcFile(char* ifcFileName);
+	bool saveIfcFileAsXml(char* ifcFileName);
 
 
 	static void	identityMatrix(transformationMatrixStruct * pMatrix);
@@ -130,14 +132,12 @@ public:
 	int		* getTimeStamp();
 
 	//	GUID
-	char * CreateCompressedGuidString();
-	char * getString64FromGuid(const GUID *pGuid, char * buf);
+	char* CreateCompressedGuidString();
+	char* getString64FromGuid(const GUID *pGuid, char * buf);
 	BOOL cv_to_64(const unsigned long number, char *code, int len);
 
 
-	bool    createIfcFile(char * ifcSchemaName, bool objectsWillBeAdded);
-	bool    saveIfcFile(char * ifcFileName);
-	bool    saveIfcFileAsXml(char * ifcFileName);
+
 
 	//		Application, Organization, Person (OwnerHistory, PersonAndOrganization)
 	int		getApplicationInstance();

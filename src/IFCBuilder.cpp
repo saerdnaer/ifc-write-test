@@ -29,33 +29,105 @@
 #include <iostream>
 #include "IFCBuilder.h"
 
+const char ifcSchemaName[] = "IFC2X3_Final.exp";
+
+
 IFCBuilder::IFCBuilder() {
 	model = 0; 
 	saveIfx = false;
+	aggrRelatedElements = NULL;
+	aggrRepresentations = NULL;
+
+	model = sdaiCreateModelBN(1, NULL, ifcSchemaName);
+
+	if	(!model) {
+		std::cout << ("IFC Model could not be instantiated, probably it cannot find the schema file.");
+		return;
+	}
+
+	transformationMatrixStruct matrix;
+	identityMatrix(&matrix);
+
+	ifcApplicationInstance = 0;
+	ifcBuildOwnerHistoryInstance = 0;
+	ifcConversionBasedUnitInstance = 0;
+	ifcDimensionalExponentsInstance = 0;
+	ifcGeometricRepresentationContextInstance = 0;
+	ifcOrganizationInstance = 0;
+	ifcPersonAndOrganizationInstance = 0;
+	ifcPersonInstance = 0;
+	ifcUnitAssignmentInstance = 0;
+
+	//
+	//	Build standard IFC structures
+	//
+
+	ifcProjectInstance = getProjectInstance();
+	ifcSiteInstance = buildSiteInstance(&matrix, NULL, &ifcSiteInstancePlacement);
+	buildRelAggregatesInstance("ProjectContainer", "ProjectContainer for Sites", ifcProjectInstance, ifcSiteInstance);
+
+	//  CDP: now own function: addBuilding(CDP_Building building) --Andreas
+	//ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);
+	//buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", ifcSiteInstance, ifcBuildingInstance);
+
+	// we don't modell the individual floors --Andreas
+	//ifcBuildingStoreyInstance = buildBuildingStoreyInstance(&matrix, ifcBuildingInstancePlacement, &ifcBuildingStoreyInstancePlacement);
+	//buildRelAggregatesInstance("BuildingContainer", "BuildingContainer for BuildigStories", ifcBuildingInstance, ifcBuildingStoreyInstance);
+
+	/*
+	if  (objectsWillBeAdded) {
+		buildRelContainedInSpatialStructureInstance("BuildingStoreyContainer", "BuildingStoreyContainer for Building Elements", ifcBuildingStoreyInstance, &aggrRelatedElements);
+	}
+	*/
+
 }
 
-void IFCBuilder::convert() 
-{
-    char ifcFileName[] = "building_test.ifc", 
-		ifcSchemaName[] = "IFC2X3_Final.exp";
+void IFCBuilder::addBuilding(CDP_Building building) {
+	transformationMatrixStruct matrix;
+	identityMatrix(&matrix);
 
-    if  (!createIfcFile(ifcSchemaName, false)) 
-	{
-        std::cout << ("IFC Model could not be instantiated, probably it cannot find the schema file.");
-    }
+	ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);
+	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", ifcSiteInstance, ifcBuildingInstance);
 
-    //
-    //  Update header
-    //
+	// Add geometry of building
+	sdaiPutAttrBN(ifcBuildingInstance, "Representation", sdaiINSTANCE, (void*) buildProductDefinitionShapeInstance());
 
-    char description[512], timeStamp[512];
+	double buildingWidth = 5000, buildingLength = 5000, buildingHeight = 2300;
 
+
+    buildRelAssociatesMaterial(ifcBuildingInstance, buildingLength);
+    createIfcPolylineShape(0, buildingLength/2, buildingWidth, buildingLength/2);
+
+	//poly
+	if ( true ) {
+
+	polygon2DStruct* pPolygon;
+        pPolygon = localCreatePolygonStructureForSquare(0, 0, buildingWidth, buildingLength);
+        createIfcExtrudedPolygonShape(pPolygon, buildingHeight);
+	}
+	//brep
     if  (view == COORDINATIONVIEW) {
         memcpy(description, "ViewDefinition [CoordinationView]", sizeof("ViewDefinition [CoordinationView]"));
     } else {
         //ASSERT(view == PRESENTATIONVIEW);
         memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
     }
+	else {
+	    shellStruct* pShell;
+        pShell = localCreateShellStructureForCuboid(0, 0, 0, buildingWidth, buildingLength, buildingHeight);
+        createIfcBRepShape(pShell);
+	}
+
+	// add Bounding Box
+	if  (false) {
+        createIfcBoundingBoxShape(buildingWidth, buildingLength, buildingHeight, "Box");
+	}
+}
+
+void IFCBuilder::updateHeader()
+{
+
+    char description[512], timeStamp[512];
 
 	genIfcTimestamp(timeStamp);
 
@@ -78,60 +150,8 @@ void IFCBuilder::convert()
             "The authorising person",           //  authorization
             "IFC2X3"                            //  fileSchema
         );
-
-    if  (saveIfx) {
-        saveIfcFileAsXml(ifcFileName);
-    } else {
-        saveIfcFile(ifcFileName);
-    }
 }
 
-
-bool IFCBuilder::createIfcFile(char * ifcSchemaName, bool objectsWillBeAdded)
-{
-    transformationMatrixStruct    matrix;
-	
-    model = sdaiCreateModelBN(1, NULL, ifcSchemaName);
-
-    if	(!model) {
-        return  false;
-    }
-    identityMatrix(&matrix);
-
-    ifcApplicationInstance = 0;
-    ifcBuildOwnerHistoryInstance = 0;
-    ifcConversionBasedUnitInstance = 0;
-    ifcDimensionalExponentsInstance = 0;
-    ifcGeometricRepresentationContextInstance = 0;
-    ifcOrganizationInstance = 0;
-    ifcPersonAndOrganizationInstance = 0;
-    ifcPersonInstance = 0;
-    ifcUnitAssignmentInstance = 0;
-
-	//
-	//	Build standard IFC structures
-	//
-
-	ifcProjectInstance = getProjectInstance();
-	ifcSiteInstance = buildSiteInstance(&matrix, NULL, &ifcSiteInstancePlacement);
-	buildRelAggregatesInstance("ProjectContainer", "ProjectContainer for Sites", ifcProjectInstance, ifcSiteInstance);
-
-	//  CDP ToDo: Add loop for all buildings
-	ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);
-	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", ifcSiteInstance, ifcBuildingInstance);
-
-	// we don't modell the individual floors --Andreas
-	//ifcBuildingStoreyInstance = buildBuildingStoreyInstance(&matrix, ifcBuildingInstancePlacement, &ifcBuildingStoreyInstancePlacement);
-	//buildRelAggregatesInstance("BuildingContainer", "BuildingContainer for BuildigStories", ifcBuildingInstance, ifcBuildingStoreyInstance);
-		
-	/*
-    if  (objectsWillBeAdded) {
-		buildRelContainedInSpatialStructureInstance("BuildingStoreyContainer", "BuildingStoreyContainer for Building Elements", ifcBuildingStoreyInstance, &aggrRelatedElements);
-    }
-	*/
-
-    return  true;
-}
 
 //  Save the created configuration
 bool IFCBuilder::saveIfcFile(char * ifcFileName)
@@ -603,35 +623,6 @@ int	IFCBuilder::buildBuildingInstance(transformationMatrixStruct* pMatrix, int i
 	(* ifcBuildingInstancePlacement) = buildLocalPlacementInstance(pMatrix, ifcPlacementRelativeTo);
 	sdaiPutAttrBN(ifcBuildingInstance, "ObjectPlacement", sdaiINSTANCE, (void*) (* ifcBuildingInstancePlacement));
 	sdaiPutAttrBN(ifcBuildingInstance, "CompositionType", sdaiENUM, "ELEMENT");
-
-	// Add geomertry of building 
-	sdaiPutAttrBN(ifcBuildingInstance, "Representation", sdaiINSTANCE, (void*) buildProductDefinitionShapeInstance());
-
-	double buildingWidth = 5000, buildingLength = 5000, buildingHeight = 2300;
-	
-
-	polygon2DStruct * pPolygon;
-    shellStruct     * pShell;
- 
-	//poly 
-	if ( true ) {
-
-        buildRelAssociatesMaterial(ifcBuildingInstance, buildingLength);
-        createIfcPolylineShape(0, buildingLength/2, buildingWidth, buildingLength/2);
-
-        pPolygon = localCreatePolygonStructureForSquare(0, 0, buildingWidth, buildingLength);
-        createIfcExtrudedPolygonShape(pPolygon, buildingHeight);
-	}
-	//brep
-	else {
-        pShell = localCreateShellStructureForCuboid(0, 0, 0, buildingWidth, buildingLength, buildingHeight);
-        createIfcBRepShape(pShell);
-	}
-
-	if  (false) {
-        createIfcBoundingBoxShape(buildingWidth, buildingLength, buildingHeight, "Box");
-	}
-
 
 	return	ifcBuildingInstance;
 }

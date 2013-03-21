@@ -6,11 +6,19 @@
  */
 
 #include "IFCBuilderTest.h"
+#include "IFCBuilder.h"
+#include "SimpleMesh.h"
+#include "CDP_Building.hpp"
 
 int main () {
 
 	IFCBuilder* builder = new IFCBuilder();
-	builder->convert();
+	CDP_Building building = new CDP_Building();
+	building->mesh = SimpleMesh::basicTestMesh();
+	builder->addBuilding(building);
+	builder->addHeader();
+	builder->saveIfcFile("test1.ifc");
+	builder->~IFCBuilder();
 }
 
 

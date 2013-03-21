@@ -16,11 +16,6 @@
 
 #include "IFCBuilder.h"
 
-extern  int     model;
-
-extern  int     * aggrRelatedElements,
-                * aggrRepresentations;
-
 
 void IFCBuilder::createIfcExtrudedPolygonShape(polygon2DStruct * pPolygon, double depth)
 {
