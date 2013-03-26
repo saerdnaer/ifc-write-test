@@ -1,15 +1,55 @@
 ////////////////////////////////////////////////////////////////////////
 //  Author:  Peter Bonsma
-//  Date:    11 July 2008
-//  Project: IFC Engine DLL
+//  $Date: 2011-03-01 07:16:27 +0200 (Tue, 01 Mar 2011) $
+//  $Revision: 3699 $
+//  Project: IFC Engine Series (example using DLL)
+//
+//  This code may be used and edited freely,
+//  also for commercial projects in open and closed source software
 //
 //  In case of use of the DLL:
 //  be aware of license fee for use of this DLL when used commercially
-//  more info for commercial use:  peter.bonsma@tno.nl
+//  more info for commercial use:	peter.bonsma@tno.nl
 //
-//  more info for using the IFC Engine DLL in other languages: 
-//  see other examples or contact:  pim.vandenhelm@tno.nl
+//  more info for using the IFC Engine DLL in other languages
+//	and creation of specific code examples:
+//									pim.vandenhelm@tno.nl
+//								    peter.bonsma@rdf.bg
 ////////////////////////////////////////////////////////////////////////
+
+
+#if !defined(AFX_IFCENGINE_H__E61DCDC8_CF8E_48DD_A8A3_C62AB6E95095__INCLUDED_)
+#define AFX_IFCENGINE_H__E61DCDC8_CF8E_48DD_A8A3_C62AB6E95095__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+//#ifndef __AFXWIN_H__
+//	#error include 'stdafx.h' before including this file for PCH
+//#endif
+
+#ifdef WIN64
+	#define int __int64
+#endif
+
+#ifdef __LP64__
+	#include <stdint.h>
+	#define int int64_t 
+#endif
+
+#ifdef _WINDOWS
+	#ifdef _USRDLL
+		#define DECL __declspec(dllexport) 
+	#else
+		#define DECL __declspec(dllimport) 
+	#endif
+	#define STDC __stdcall
+#else
+	#define DECL /*nothing*/
+	#define STDC /*nothing*/
+#endif
+
 
 #ifdef __cplusplus
     extern "C" {
@@ -29,6 +69,22 @@
 #define		sdaiLOGICAL				sdaiINTEGER + 1
 #define		sdaiREAL				sdaiLOGICAL + 1
 #define		sdaiSTRING				sdaiREAL + 1
+#define		sdaiUNICODE				sdaiSTRING + 1
+#define		sdaiEXPRESSSTRING		sdaiUNICODE + 1
+#define		engiGLOBALID			sdaiEXPRESSSTRING + 1
+
+//
+//	Note on sdaiSTRING and sdaiUNICODE
+//
+//	sdaiUNICODE
+//		this will convert all internal strings from/too unicode, the internal representation and what is written to the IFC file is mapped
+//			"\" will be converted into "\\" to enable basic parses to still interpret file paths
+//			"'" will be converted to \X1\hh\X0\ or \X2\00hh\X0\ to prevent basic interpreters to read files with strings containing these characters
+//
+//	sdaiSTRING
+//		this will leave all information as is in the IFC file, the rules are that char's ( int ) 32 to 126 (inclusive) will be kept
+//		all other strings will be converted to \X1\hh\X0\ or \X2\00hh\X0\ 
+
 
 #define     sdaiARRAY               1
 #define     sdaiLIST                2
@@ -44,59 +100,96 @@ typedef	int				SdaiPrimitiveType;
 typedef	int				* SdaiSet;
 typedef	char			* SdaiString;
 
-int __declspec(dllexport) __stdcall setStringUnicode(
+int DECL STDC setStringUnicode(
 										bool	unicode
 									);
 
-int __declspec(dllexport) * __stdcall xxxxGetEntityAndSubTypesExtent(	//		SdaiSet
+int DECL * STDC xxxxGetEntityAndSubTypesExtent(	//		SdaiSet
 										int		model,					//			SdaiModel
 										int		entity					//			SdaiEntity
 									);
 
-int __declspec(dllexport) * __stdcall xxxxGetEntityAndSubTypesExtentBN(	//		SdaiAggr
+int DECL * STDC xxxxGetEntityAndSubTypesExtentBN(	//		SdaiAggr
 										int		model,					//			SdaiModel
 										char	* entityName			//			SdaiString
 									);
 
-bool __declspec(dllexport) __stdcall xxxxIsKindOf(int instance, int entity);
+int DECL STDC xxxxIsKindOf(                       //      SdaiBoolean
+                                                 int instance, int entity); 
 
 
 
-int __declspec(dllexport) * __stdcall xxxxGetInstancesUsing(			//		SdaiAggr
+int DECL * STDC xxxxGetInstancesUsing(			//		SdaiAggr
 										int		instance				//			SdaiInstance
 									);
 
-int __declspec(dllexport) __stdcall xxxxDeleteFromAggregation(	        //		SdaiAggr
+int DECL STDC xxxxDeleteFromAggregation(	        //		SdaiAggr
 										int		instance,				//			SdaiInstance
 										int		* aggregate,			//			SdaiAggr
 										int		elementIndex			//			SdaiInteger
 									);
 
-void __declspec(dllexport) * __stdcall xxxxGetAttrDefinitionByValue(	//		SdaiAttr
+void DECL * STDC xxxxGetAttrDefinitionByValue(	//		SdaiAttr
 										int		instance,				//			SdaiInstance
 										void	* value		            //			void (aggregation or instance)
 									);
 
-void __declspec(dllexport) __stdcall xxxxGetAttrNameByIndex(          
+void DECL STDC xxxxGetAttrNameByIndex(          
                                         int		instance,				//			SdaiInstance
 										int 	index,			        //			SdaiAttr
                                         char**  name                    //          name
                                     );
 
+int DECL STDC xxxxOpenModelByStream(
+										int		repository,
+										void	* callback,
+										char	* schemaName
+									);
 
-int __declspec(dllexport) __stdcall sdaiOpenModelBN(
+
+int DECL STDC sdaiOpenModelBNUnicode(
+										int		repository,
+										void	* fileName,
+										void	* schemaName
+									);
+
+int DECL STDC sdaiOpenModelBN(
 										int		repository,
 										char	* fileName,
 										char	* schemaName
 									);
 
-int __declspec(dllexport) __stdcall sdaiCreateModelBN(
+
+int DECL STDC sdaiCreateModelBNUnicode(
+										int		repository,
+										void	* fileName,
+										void	* schemaName
+									);
+
+int DECL STDC sdaiCreateModelBN(
 										int		repository,
 										char	* fileName,
 										char	* schemaName
 									);
 
-void __declspec(dllexport) __stdcall SetSPFFHeader(
+int DECL STDC GetSPFFHeaderItem(
+										int		model,
+										int		itemIndex,
+										int		itemSubIndex,
+										int		valueType,
+                                        char    ** value
+                                    );
+
+int DECL STDC SetSPFFHeaderItem(
+										int		model,
+										int		itemIndex,
+										int		itemSubIndex,
+										int		valueType,
+                                        char    * value
+                                    );
+
+void DECL STDC SetSPFFHeader(
+										int		model,
                                         char    * description,
                                         char    * implementationLevel,
                                         char    * name,
@@ -109,231 +202,304 @@ void __declspec(dllexport) __stdcall SetSPFFHeader(
                                         char    * fileSchema
                                     );
 
-void __declspec(dllexport) __stdcall sdaiSaveModelBN(
+void DECL STDC sdaiSaveModelBNUnicode(
+										int		model,
+										void	* fileName
+									);
+
+void DECL STDC sdaiSaveModelBN(
 										int		model,
 										char	* fileName
 									);
 
-void __declspec(dllexport) __stdcall sdaiSaveModelAsXmlBN(
+void DECL STDC sdaiSaveModelAsXmlBNUnicode(
+										int		model,
+										void	* fileName
+									);
+
+void DECL STDC sdaiSaveModelAsXmlBN(
 										int		model,
 										char	* fileName
 									);
 
-void __declspec(dllexport) __stdcall sdaiCloseModel(
+void DECL STDC sdaiCloseModel(
 										int		model
 									);
 
+void DECL STDC setPreProcessing(
+										int		model,
+										bool	on
+									);
 
-void __declspec(dllexport) * __stdcall engiGetAggrElement(				//		void*
+void DECL STDC setPostProcessing(
+										int		model,
+										bool	on
+									);
+
+void DECL * STDC engiGetAggrElement(				//		void*
 										int		* aggregate,			//			SdaiAggr
 										int		elementIndex,			//			SdaiInteger
 										int		valueType,				//			SdaiPrimitiveType
 										void	* pValue				//			void*
 									);
 
-int __declspec(dllexport) __stdcall engiGetInstanceMetaInfo(			//		void*
+int DECL STDC engiGetInstanceMetaInfo(			//		void*
 										int		* instance,				//			SdaiAppInstance
 										int		* localId,				//			...
 										char	** className,			//			..
 										char	** classNameUC			//			...*
 									);
 
-int __declspec(dllexport) __stdcall engiGetInstanceLocalId(				//
+void DECL STDC engiGetEntityName(
+										int		entity,					//			...
+										char	** className			//			..
+									);
+
+int DECL STDC engiGetEntityParent(
+										int		entity					//			...
+									);
+
+void DECL STDC engiGetEntityProperty(
+										int		entity,					//			...
+										int		index,					//			...
+										char	** propertyName,		//			...
+										int		* optional,				//			...
+										int		* type,					//			...
+										int		* array,				//			...
+										int		* set,					//			...
+										int		* list,					//			...
+										int		* bag,					//			...
+										int		* min,					//			...
+										int		* max,					//			...
+										int		* referenceEntity,		//			...
+										int		* inverse				//			...
+									);
+
+int DECL STDC engiGetInstanceLocalId(				//
 										int		instance				//			SdaiAppInstance
 									);
 
-char __declspec(dllexport) * __stdcall engiGetInstanceClassInfo(		//
+char DECL * STDC engiGetInstanceClassInfo(		//
 										int		instance				//			SdaiAppInstance
 									);
 
-char __declspec(dllexport) * __stdcall engiGetInstanceClassInfoUC(		//
+char DECL * STDC engiGetInstanceClassInfoUC(		//
 										int		instance				//			SdaiAppInstance
 									);
 	
 
-void __declspec(dllexport) __stdcall sdaiAppend(						//		void
+void DECL STDC sdaiAppend(						//		void
 										int		list,					//			SdaiList
 										int		valueType,				//			SdaiPrimitiveType
 										void	* value					//			void*
 									);
 
-void __declspec(dllexport) __stdcall sdaiBeginning(						//		void
+void DECL STDC sdaiBeginning(						//		void
 										int		iterator				//			SdaiIterator
 									);
 
-void __declspec(dllexport) * __stdcall sdaiCreateADB(					//		void*
+void DECL * STDC sdaiCreateADB(					//		void*
 										int		valueType,				//			SdaiPrimitive
 										void	* value					//			void*
 									);
 
-int __declspec(dllexport) * __stdcall sdaiCreateAggr(					//		SdaiAggr
+int DECL * STDC sdaiCreateAggr(					//		SdaiAggr
 										int		instance,				//			SdaiAppInstance
 										void	* attribute				//			SdaiAttr
 									);
 
-int __declspec(dllexport) * __stdcall sdaiCreateAggrBN(					//		SdaiAggr
+int DECL * STDC sdaiCreateAggrBN(					//		SdaiAggr
 										int		instance,				//			SdaiAppInstance
 										char	* attributeName			//			SdaiString
 									);
 
-int __declspec(dllexport) __stdcall sdaiCreateInstance(					//		SdaiAppInstance
+int DECL STDC sdaiCreateInstance(					//		SdaiAppInstance
 										int		model,					//			SdaiModel
 										int		entity					//			SdaiEntity
 									);
 
-int __declspec(dllexport) __stdcall sdaiCreateInstanceEI(					//		SdaiAppInstance
+int DECL STDC sdaiCreateInstanceEI(					//		SdaiAppInstance
 										int		model,					//			SdaiModel
 										int		entity,					//			SdaiEntity
 										int		express_id				//			
 									);
 
-int __declspec(dllexport) __stdcall sdaiCreateInstanceBN(				//		SdaiAppInstance
+int DECL STDC sdaiCreateInstanceBN(				//		SdaiAppInstance
 										int		model,					//			SdaiModel
 										char	* entityName			//			SdaiString
 									);
 
-int __declspec(dllexport) __stdcall sdaiCreateInstanceBNEI(				//		SdaiAppInstance
+int DECL STDC sdaiCreateInstanceBNEI(				//		SdaiAppInstance
 										int		model,					//			SdaiModel
 										char	* entityName,			//			SdaiString
 										int		express_id				//			
 									);
 
-void __declspec(dllexport) * __stdcall sdaiCreateIterator(				//		SdaiIterator
+void DECL * STDC sdaiCreateIterator(				//		SdaiIterator
 										int		* aggregate				//			SdaiAggr
 									);
 
-void __declspec(dllexport) __stdcall sdaiDeleteInstance(				//		void
+void DECL STDC sdaiDeleteInstance(				//		void
 										int		instance				//			SdaiAppInstance
 									);
 
-void __declspec(dllexport) __stdcall sdaiDeleteIterator(				//		void
+void DECL STDC sdaiDeleteIterator(				//		void
 										int		iterator				//			SdaiIterator
 									);
 
-void __declspec(dllexport) __stdcall sdaiEnd(							//		void
+void DECL STDC sdaiEnd(							//		void
 										int		iterator				//			SdaiIterator
 									);
 
-int __declspec(dllexport) __stdcall sdaiErrorQuery(						//		SdaiErrorCode
+int DECL STDC sdaiErrorQuery(						//		SdaiErrorCode
 									);
 
-void __declspec(dllexport) * __stdcall sdaiGetAggrByIterator(			//		void*
+int DECL  STDC sdaiGetADBType(				//		void
+										void	* ADB	 				//			sdaiADB
+									);
+
+char DECL * STDC sdaiGetADBTypePath(				//		void
+										void	* ADB,	 				//			sdaiADB
+										int		typeNameNumber			//			int
+									);
+
+void DECL STDC sdaiGetADBValue(				//		void
+										void	* ADB,	 				//			sdaiADB
+										int		valueType,				//			SdaiPrimitiveType
+										void	* value					//			void*
+									);
+
+void DECL * STDC sdaiGetAggrByIterator(			//		void*
 										int		iterator,				//			SdaiIterator
 										int		valueType,				//			SdaiPrimitiveType
 										void	* value					//			void*
 									);
 
-void __declspec(dllexport) * __stdcall sdaiGetAttr(						//		void*
+void DECL * STDC sdaiGetAttr(						//		void*
 										int		instance,				//			SdaiInstance
 										void	* attribute,			//			SdaiAttr
 										int		valueType,				//			SdaiPrimitiveType
 										void	* value					//			void*
 									);
 
-void __declspec(dllexport) * __stdcall	sdaiGetAttrBN(					//		void*
+void DECL * STDC	sdaiGetAttrBN(					//		void*
 										int		instance,				//			SdaiInstance
 										char	* attributeName,		//			SdaiString
 										int		valueType,				//			SdaiPrimitiveType
 										void	* value					//			void*
 									);
 
-void __declspec(dllexport) * __stdcall sdaiGetAttrDefinition(			//		SdaiAttr
+void DECL * STDC sdaiGetAttrDefinition(			//		SdaiAttr
 										int		entity,					//			SdaiEntity
 										char	* attributeName			//			SdaiString
 									);
 
-int __declspec(dllexport) __stdcall	sdaiGetEntity(						//		SdaiEntity
+int DECL STDC	sdaiGetEntity(						//		SdaiEntity
 										int		model,					//			SdaiModel
 										char	* entityName			//			SdaiString
 									);
 
-int __declspec(dllexport) * __stdcall sdaiGetEntityExtent(				//		SdaiAggr
+int DECL * STDC sdaiGetEntityExtent(				//		SdaiAggr
 										int		model,					//			SdaiModel
 										int		entity					//			SdaiEntity
 									);
 
-int __declspec(dllexport) * __stdcall sdaiGetEntityExtentBN(			//		SdaiAggr
+int DECL * STDC sdaiGetEntityExtentBN(			//		SdaiAggr
 										int		model,					//			SdaiModel
 										char	* entityName			//			SdaiString
 									);
 
-int __declspec(dllexport) __stdcall sdaiGetInstanceType(				//		SdaiEntity
+int DECL STDC sdaiGetInstanceType(				//		SdaiEntity
 										int		instance				//			SdaiInstance
 									);
 
-int	__declspec(dllexport) __stdcall	sdaiGetMemberCount(					//		SdaiInteger
+int	DECL STDC	sdaiGetMemberCount(					//		SdaiInteger
 										int		* aggregate				//			SdaiAggr
 									);
 
-bool __declspec(dllexport) __stdcall sdaiIsInstanceOf(					//		SdaiBoolean
+int DECL STDC sdaiIsInstanceOf(					//		SdaiBoolean
 										int		instance,				//			SdaiInstance
 										int		entity					//			SdaiEntity
 									);
 
-bool __declspec(dllexport) __stdcall sdaiIsInstanceOfBN(				//		SdaiBoolean
+int DECL STDC sdaiIsInstanceOfBN(				//		SdaiBoolean
 										int		instance,				//			SdaiInstance
 										char	* entityName			//			SdaiString
 									);
 
-bool __declspec(dllexport) __stdcall sdaiNext(							//		SdaiBoolean
+int DECL STDC sdaiNext(							//		SdaiBoolean
 										int		iterator				//			SdaiIterator
 									);
 
-void __declspec(dllexport) __stdcall sdaiPrepend(						//		void
+void DECL STDC sdaiPrepend(						//		void
 										int		list,					//			SdaiList
 										int		valueType,				//			SdaiPrimitiveType
 										void	* value					//			void*
 									);
 
-bool __declspec(dllexport) __stdcall sdaiPrevious(						//		SdaiBoolean
+int DECL STDC sdaiPrevious(						//		SdaiBoolean
 										int		iterator				//			SdaiIterator
 									);
 
-void __declspec(dllexport) __stdcall sdaiPutADBTypePath(				//		void
+void DECL STDC sdaiPutADBTypePath(				//		void
 										void	* ADB,					//			sdaiADB
 										int		pathCount,				//			int
 										char	* path					//			char*
 									);
 
-void __declspec(dllexport) __stdcall sdaiPutAggrByIterator(				//		void
+void DECL STDC sdaiPutAggrByIterator(				//		void
 										int		iterator,				//			SdaiIterator
 										int		valueType,				//			SdaiPrimitiveType
 										void	* value					//			void*
 									);
 
-void __declspec(dllexport) __stdcall sdaiPutAttr(						//		void
+void DECL STDC sdaiPutAttr(						//		void
 										int		instance,				//			SdaiInstance
 										void	* attribute,			//			SdaiAttr
 										int		valueType,				//			SdaiPrimitive
 										void	* value					//			void*
 									);
 
-void __declspec(dllexport) __stdcall sdaiPutAttrBN(						//		void
+void DECL STDC sdaiPutAttrBN(						//		void
 										int		instance,				//			SdaiInstance
 										char	* attributeName,		//			SdaiString
 										int		valueType,				//			SdaiPrimitive
 										void	* value					//			void*
 									);
 
-bool __declspec(dllexport) __stdcall sdaiTestAttr(						//		SdaiBoolean
+int DECL STDC sdaiTestAttr(						//		SdaiBoolean
 										int		instance,				//			SdaiInstance
 										void	* attribute				//			SdaiAttr
 									);
 
-bool __declspec(dllexport) __stdcall sdaiTestAttrBN(					//		SdaiBoolean
+int DECL STDC sdaiTestAttrBN(					//		SdaiBoolean
 										int		instance,				//			SdaiInstance
 										char	* attributeName			//			SdaiString
 									);
 
 
-int __declspec(dllexport) __stdcall initializeModelling(
+
+int		DECL	STDC	engiGetAttrType(						//		void*
+										int		instance,				//			SdaiInstance
+										void	* attribute
+									);
+
+int		DECL	STDC	engiGetAttrTypeBN(					//		void*
+										int		instance,				//			SdaiInstance
+										char	* attributeName
+									);
+
+
+
+
+int DECL STDC initializeModelling(
 										int		model,
 										int		* noVertices,
 										int		* noIndices,
 										double	scale
 									);
 
-int __declspec(dllexport) __stdcall initializeModellingInstance(
+int DECL STDC initializeModellingInstance(
 										int		model,
 										int		* noVertices,
 										int		* noIndices,
@@ -341,7 +507,7 @@ int __declspec(dllexport) __stdcall initializeModellingInstance(
 										int		instance				//			SdaiInstance
 									);
 
-int __declspec(dllexport) __stdcall initializeModellingInstanceEx(
+int DECL STDC initializeModellingInstanceEx(
 										int		model,
 										int		* noVertices,
 										int		* noIndices,
@@ -350,14 +516,14 @@ int __declspec(dllexport) __stdcall initializeModellingInstanceEx(
 										int		instanceList			//			SdaiInstance
 									);
 
-int __declspec(dllexport) __stdcall finalizeModelling(
+int DECL STDC finalizeModelling(
 										int		model,
 										float	* pVertices,
 										int		* pIndices,
 										int		FVF
 									);
 
-int __declspec(dllexport) __stdcall getInstanceInModelling(
+int DECL STDC getInstanceInModelling(
 										int		model,
 										int		instance,
 										int		mode,
@@ -366,7 +532,7 @@ int __declspec(dllexport) __stdcall getInstanceInModelling(
 										int		* primitiveCount
 									);
 
-int __declspec(dllexport) __stdcall getInstanceDerivedPropertiesInModelling(
+int DECL STDC getInstanceDerivedPropertiesInModelling(
 										int		model,
 										int		instance,
 										double	* height,
@@ -374,7 +540,7 @@ int __declspec(dllexport) __stdcall getInstanceDerivedPropertiesInModelling(
 										double	* thickness
 									);
 
-int __declspec(dllexport) __stdcall getInstanceDerivedBoundingBox(
+int DECL STDC getInstanceDerivedBoundingBox(
 										int		model,
 										int		instance,
 										double	* Ox,
@@ -385,7 +551,7 @@ int __declspec(dllexport) __stdcall getInstanceDerivedBoundingBox(
 										double	* Vz
 									);
 
-int __declspec(dllexport) __stdcall getInstanceDerivedTransformationMatrix(
+int DECL STDC getInstanceDerivedTransformationMatrix(
 										int		model,
 										int		instance,
 										double	* _11,
@@ -406,73 +572,84 @@ int __declspec(dllexport) __stdcall getInstanceDerivedTransformationMatrix(
 										double	* _44
 									);
 
-void __declspec(dllexport) __stdcall circleSegments(
+void DECL STDC circleSegments(
 										int		circles,
 										int		smallCircles
 									);
 
-int __declspec(dllexport) __stdcall getTimeStamp(
+int DECL STDC getTimeStamp(
 										int		model
 									);
 
-char __declspec(dllexport) * __stdcall getChangedData(
+char DECL * STDC getChangedData(
 										int		model,
 										int		* timeStamp
 									);
 
-void __declspec(dllexport) __stdcall setChangedData(
+void DECL STDC setChangedData(
 										int		model,
 										int		* timeStamp,
 										char	* changedData
 									);
 
-void __declspec(dllexport) * __stdcall internalGetBoundingBox(
+void DECL * STDC internalGetBoundingBox(
 										int		model,
 										int		instance
 									);
 
-void __declspec(dllexport) * __stdcall internalGetCenter(
+void DECL * STDC internalGetCenter(
 										int		model,
 										int		instance
 									);
 
-void __declspec(dllexport) __stdcall internalSetLink(
+void DECL STDC internalSetLink(
 										int		instance,				//			SdaiInstance
 										char	* attributeName,		//			SdaiString
 										int		linked_id
 									);
 
-void __declspec(dllexport) __stdcall internalAddAggrLink(				//		void
+void DECL STDC internalAddAggrLink(				//		void
 										int		list,					//			SdaiList
 										int		linked_id
 									);
 
-char __declspec(dllexport) * __stdcall sdaiGetStringAttrBN(int instance, char * attributeName);
+char DECL * STDC sdaiGetStringAttrBN(int instance, char * attributeName);
 
-int __declspec(dllexport) __stdcall sdaiGetInstanceAttrBN(int instance, char * attributeName);
+int DECL STDC sdaiGetInstanceAttrBN(int instance, char * attributeName);
 
-int __declspec(dllexport) __stdcall sdaiGetAggregationAttrBN(int instance, char * attributeName);
+int DECL STDC sdaiGetAggregationAttrBN(int instance, char * attributeName);
 
+int	DECL STDC internalGetP21Line(
+										int		instance				//			SdaiAppInstance
+									);
 
+void DECL STDC engiGetNotReferedAggr(int model, int * pValue);
 
-void __declspec(dllexport) __stdcall engiGetNotReferedAggr(int model, int * pValue);
+void DECL STDC engiGetAttributeAggr(int instance, int * pValue);
 
-void __declspec(dllexport) __stdcall engiGetAttributeAggr(int instance, int * pValue);
-
-void __declspec(dllexport) __stdcall engiGetAggrUnknownElement(		//		void
+void DECL STDC engiGetAggrUnknownElement(		//		void
 										int		* aggregate,			//			SdaiAggr
 										int		elementIndex,			//			SdaiInteger
 										int		* valueType,			//			SdaiPrimitiveType
 										void	* pValue				//			void*
 									);
 
-bool __declspec(dllexport) __stdcall sdaiIsKindOf(int instance, int entity);
+int DECL STDC sdaiIsKindOf(int instance, int entity);
 
-int __declspec(dllexport) * __stdcall sdaiFindInstanceUsers(int instance, int* domain, int* resultList);
+int DECL * STDC sdaiFindInstanceUsers(int instance, int* domain, int* resultList);
 
-int __declspec(dllexport) * __stdcall sdaiFindInstanceUsedIn(int instance, int* domain, int* resultList);
+int DECL * STDC sdaiFindInstanceUsedIn(int instance, int* domain, int* resultList);
 
-int __declspec(dllexport) __stdcall sdaiplusGetAggregationType(int instance, int *aggregation);
+int DECL STDC sdaiplusGetAggregationType(int instance, int *aggregation);
+
+int DECL STDC engiGetEntityNoArguments(int entity);
+
+char DECL * STDC engiGetEntityArgumentName(int entity, int index);
+
+int DECL STDC engiGetEntityArgumentType(int entity, int index);
+
+#undef DECL 
+#undef STDC  
 
 #ifdef __cplusplus
 }
@@ -481,6 +658,10 @@ int __declspec(dllexport) __stdcall sdaiplusGetAggregationType(int instance, int
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#ifdef __LP64__
+	#undef int 
+#endif
 
 #endif // !defined(AFX_IFCENGINE_H__E61DCDC8_CF8E_48DD_A8A3_C62AB6E95095__INCLUDED_)
 

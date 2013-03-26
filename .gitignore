@@ -10,3 +10,5 @@ Debug/
 *.sdf
 Release*
 *.suo
+eclipse/
+visualstudio/
