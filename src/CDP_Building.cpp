@@ -1,16 +1,12 @@
-#include "CDP_Building.hpp"
+#include "CDP_Building.h"
 
 
-CDP_Building::CDP_Building(void)
+CDP_Building::CDP_Building()
 {
 }
 
 
-CDP_Building::~CDP_Building(void)
+CDP_Building::~CDP_Building()
 {
-}
-
-int CDP_Building::id(void)
-{
-	return simple->id;
+	delete mesh;
 }

@@ -27,9 +27,9 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <time.h>
+#include <conio.h>
 #include "IFCBuilder.h"
-
-const char ifcSchemaName[] = "IFC2X3_Final.exp";
 
 
 IFCBuilder::IFCBuilder() {
@@ -38,10 +38,34 @@ IFCBuilder::IFCBuilder() {
 	aggrRelatedElements = NULL;
 	aggrRepresentations = NULL;
 
+	ifcApplicationInstance = 0,
+	ifcBuildingInstance = 0,
+	ifcBuildingInstancePlacement = 0,
+	ifcBuildingStoreyInstance = 0,
+	ifcBuildingStoreyInstancePlacement = 0,
+	ifcBuildOwnerHistoryInstance = 0,
+	ifcConversionBasedUnitInstance = 0,
+	ifcDimensionalExponentsInstance = 0,
+	ifcGeometricRepresentationContextInstance = 0,
+	ifcOrganizationInstance = 0,
+	ifcPersonAndOrganizationInstance = 0,
+	ifcPersonInstance = 0,
+	ifcProjectInstance = 0,
+	ifcSiteInstance = 0,
+	ifcSiteInstancePlacement = 0,
+	ifcUnitAssignmentInstance = 0;
+
+	char ifcSchemaName[30] = "../IFC2X3_Final.exp";
+
+	if ( !PathFileExists(ifcSchemaName) ) {
+		std::cerr << "IFC schema file is not accessible" << std::endl;
+	}
 	model = sdaiCreateModelBN(1, NULL, ifcSchemaName);
 
 	if	(!model) {
-		std::cout << ("IFC Model could not be instantiated, probably it cannot find the schema file.");
+		std::cerr << ("IFC Model could not be instantiated, probably it cannot find the schema file.");
+		getch();
+		exit(-1);
 		return;
 	}
 
@@ -106,12 +130,6 @@ void IFCBuilder::addBuilding(CDP_Building building) {
         createIfcExtrudedPolygonShape(pPolygon, buildingHeight);
 	}
 	//brep
-    if  (view == COORDINATIONVIEW) {
-        memcpy(description, "ViewDefinition [CoordinationView]", sizeof("ViewDefinition [CoordinationView]"));
-    } else {
-        //ASSERT(view == PRESENTATIONVIEW);
-        memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
-    }
 	else {
 	    shellStruct* pShell;
         pShell = localCreateShellStructureForCuboid(0, 0, 0, buildingWidth, buildingLength, buildingHeight);
@@ -124,12 +142,22 @@ void IFCBuilder::addBuilding(CDP_Building building) {
 	}
 }
 
-void IFCBuilder::updateHeader()
+void IFCBuilder::setHeader(char* ifcFileName)
 {
 
     char description[512], timeStamp[512];
 
+
+	if  (view == COORDINATIONVIEW) {
+        memcpy(description, "ViewDefinition [CoordinationView]", sizeof("ViewDefinition [CoordinationView]"));
+    } else {
+        //ASSERT(view == PRESENTATIONVIEW);
+        memcpy(description, "ViewDefinition [PresentationView]", sizeof("ViewDefinition [PresentationView]"));
+    }
+
 	genIfcTimestamp(timeStamp);
+
+
 
     int i = 0, j = 0;
     while  (ifcFileName[i]) {
@@ -139,6 +167,7 @@ void IFCBuilder::updateHeader()
     }
 
     SetSPFFHeader(
+			model,
             description,                        //  description
             "2;1",                              //  implementationLevel
             &ifcFileName[j],                    //  name
@@ -149,18 +178,21 @@ void IFCBuilder::updateHeader()
             "IFC Engine DLL version 1.02 beta", //  originatingSystem
             "The authorising person",           //  authorization
             "IFC2X3"                            //  fileSchema
-        );
+    );
+
 }
 
 
 //  Save the created configuration
-bool IFCBuilder::saveIfcFile(char * ifcFileName)
+void IFCBuilder::saveIfcFile(char* ifcFileName)
 {
+	setHeader(ifcFileName);
 	sdaiSaveModelBN(model, ifcFileName);
 }
 
-bool IFCBuilder::saveIfcFileAsXml(char * ifcFileName)
+void IFCBuilder::saveIfcFileAsXml(char* ifcFileName)
 {
+	setHeader(ifcFileName);
 	sdaiSaveModelAsXmlBN(model, ifcFileName);
 }
 

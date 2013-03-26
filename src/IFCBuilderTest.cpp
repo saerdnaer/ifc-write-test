@@ -8,17 +8,20 @@
 #include "IFCBuilderTest.h"
 #include "IFCBuilder.h"
 #include "SimpleMesh.h"
-#include "CDP_Building.hpp"
+#include "CDP_Building.h"
+#include <conio.h>
 
 int main () {
 
 	IFCBuilder* builder = new IFCBuilder();
-	CDP_Building building = new CDP_Building();
-	building->mesh = SimpleMesh::basicTestMesh();
+	CDP_Building* building = new CDP_Building();
+	SimpleMesh mesh = SimpleMesh::basicTestMesh();
+	building->mesh = &mesh;
 	builder->addBuilding(building);
-	builder->addHeader();
 	builder->saveIfcFile("test1.ifc");
 	builder->~IFCBuilder();
+	std::cout << "wrote ifc data to test1.ifc" << std::endl;
+	getch();
 }
 
 
