@@ -105,7 +105,7 @@ IFCBuilder::IFCBuilder() {
 
 }
 
-void IFCBuilder::addBuilding(CDP_Building building) {
+void IFCBuilder::addBuilding(CDP_Building* building) {
 
 	ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);
 	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", ifcSiteInstance, ifcBuildingInstance);

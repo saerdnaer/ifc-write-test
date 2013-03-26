@@ -22,7 +22,8 @@
 #include "stdafx.h"
 #include "IFCEngine.h"
 #include "Point3d.h"
-#include "CDP_Building.hpp"
+#include "CDP_Building.h"
+
 
 #define     COORDINATIONVIEW    0
 #define     PRESENTATIONVIEW    1
@@ -89,7 +90,7 @@ typedef struct SHELLSTRUCT {
 
 class IFCBuilder {
 private:
-	char* ifcSchemaName, * ifcFileName;
+	char* ifcSchemaName;
 	bool saveIfx;
 	int view;
 
@@ -124,9 +125,10 @@ transformationMatrixStruct matrix;
 
 public:
 	IFCBuilder();
-	void addBuilding(CDP_Building building);
-	bool saveIfcFile(char* ifcFileName);
-	bool saveIfcFileAsXml(char* ifcFileName);
+	void addBuilding(CDP_Building* building);
+	void setHeader(char* ifcFileName);
+	void saveIfcFile(char* ifcFileName);
+	void saveIfcFileAsXml(char* ifcFileName);
 
 
 	static void	identityMatrix(transformationMatrixStruct * pMatrix);
