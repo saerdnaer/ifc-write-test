@@ -130,6 +130,10 @@ public:
 	void saveIfcFile(char* ifcFileName);
 	void saveIfcFileAsXml(char* ifcFileName);
 
+	void createIfcBRepShape(SimpleMesh* mesh);
+	int buildShapeRepresentationInstance(SimpleMesh* mesh);
+	int buildCartesianPointInstance(Point3d point);
+
 
 	static void	identityMatrix(transformationMatrixStruct * pMatrix);
 	static void	identityPoint(point3DStruct * pPoint);

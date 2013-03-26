@@ -14,7 +14,7 @@
  */
 class Point3d
 {
-private:
+public:
 	union
 	    {
 	        double vec[3];
@@ -26,7 +26,6 @@ private:
 	        };
 	    };
 
-public:
 	Point3d();
 	Point3d(double x_, double y_, double z_);
 

@@ -21,38 +21,15 @@ class SimpleMesh
 {
 public:
 	vector<Point3d> vertices;
-	vector<vector<int> > polygons;
+	typedef vector<int> polygon_type;
+	vector<polygon_type> polygons;
 
 	SimpleMesh();
     typedef boost::shared_ptr<SimpleMesh> Ptr;
     typedef boost::shared_ptr<const SimpleMesh> ConstPtr;
 
 	bool isEmpty() const;
-	// returns a simple mesh consisting of 3 triangles intersecting at the origin point 0,0,0 and each one lying in on of the natural coordinate frame's planes
-	/*
-	 *  *
-                             ***
-                             ** **
-                            * *   *
-                            * *    *
-                           *  *     *
-                          *   *      *
-                          *   *       **
-                         *    *         *
-                         *    *          *
-                        *     *           *
-                        *     *            *
-                       *      ******        **
-                       *      *     ********  *
-                      *     **              ****
-                      *    *             ****
-                     *    *          ****
-                    *   **       ****
-                    *  *     ****
-                   *  *  ****
-                   ******
-                   **
-	 */
+
 	static SimpleMesh basicTestMesh();
 };
 

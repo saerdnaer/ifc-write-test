@@ -120,24 +120,112 @@ void IFCBuilder::addBuilding(CDP_Building* building) {
     createIfcPolylineShape(0, buildingLength/2, buildingWidth, buildingLength/2);
 
 	//poly
-	if ( true ) {
-
-	polygon2DStruct* pPolygon;
+	if ( false ) {
+		polygon2DStruct* pPolygon;
         pPolygon = localCreatePolygonStructureForSquare(0, 0, buildingWidth, buildingLength);
         createIfcExtrudedPolygonShape(pPolygon, buildingHeight);
 	}
 	//brep
-	else {
+	if (false) { 	
 	    shellStruct* pShell;
         pShell = localCreateShellStructureForCuboid(0, 0, 0, buildingWidth, buildingLength, buildingHeight);
         createIfcBRepShape(pShell);
 	}
+	createIfcBRepShape(building->mesh);
+
+
 
 	// add Bounding Box
 	if  (false) {
         createIfcBoundingBoxShape(buildingWidth, buildingLength, buildingHeight, "Box");
 	}
 }
+
+
+void IFCBuilder::createIfcBRepShape(SimpleMesh* mesh)
+{
+       sdaiAppend((int) aggrRepresentations, sdaiINSTANCE, (void*) buildShapeRepresentationInstance(mesh));
+}
+
+
+
+int IFCBuilder::buildShapeRepresentationInstance(SimpleMesh* mesh)
+{
+	// this function is based on buildShapeRepresentationInstance(shellStruct* pShell) --Andreas
+	
+	int ifcShapeRepresentationInstance;
+	int* aggrItems;
+
+	ifcShapeRepresentationInstance = sdaiCreateInstanceBN(model, "IFCSHAPEREPRESENTATION");
+
+	aggrItems = sdaiCreateAggrBN(ifcShapeRepresentationInstance, "Items");
+
+	sdaiPutAttrBN(ifcShapeRepresentationInstance, "RepresentationIdentifier", sdaiSTRING, "Body");
+	sdaiPutAttrBN(ifcShapeRepresentationInstance, "RepresentationType", sdaiSTRING, "Brep");
+	sdaiPutAttrBN(ifcShapeRepresentationInstance, "ContextOfItems", sdaiINSTANCE, (void*) getGeometricRepresentationContextInstance());
+
+    //while  (pShell) {
+    //POLYGON3DSTRUCT  * pPolygon = pShell->pPolygon;
+    int     ifcFacetedBrepInstance, ifcClosedShellInstance,* aggrCfsFaces;
+
+	ifcClosedShellInstance = sdaiCreateInstanceBN(model, "IFCCLOSEDSHELL");
+	aggrCfsFaces = sdaiCreateAggrBN(ifcClosedShellInstance, "CfsFaces");
+
+	int ifcPolyLoopInstance,* aggrPolygon,
+		ifcFaceOuterBoundInstance,
+		ifcFaceInstance,* aggrBounds;
+
+	vector<int> ifcPointInstances(mesh->vertices.size(), 0);
+
+	for(vector<SimpleMesh::polygon_type>::iterator polygon = mesh->polygons.begin(); 
+		polygon != mesh->polygons.end(); 
+		++polygon) {
+
+
+	    ifcPolyLoopInstance = sdaiCreateInstanceBN(model, "IFCPOLYLOOP");
+	    aggrPolygon = sdaiCreateAggrBN(ifcPolyLoopInstance, "Polygon");
+
+		for(SimpleMesh::polygon_type::iterator point_id = polygon->begin(); 
+		point_id != polygon->end(); 
+		++point_id) {
+            //  Check if point is already written
+            if  (ifcPointInstances[*point_id] == 0) {
+				ifcPointInstances[*point_id] = buildCartesianPointInstance(mesh->vertices[*point_id]);
+            }
+                            
+            sdaiAppend((int) aggrPolygon, sdaiINSTANCE, (void *) ifcPointInstances[*point_id]);
+        }
+
+	    ifcFaceOuterBoundInstance = sdaiCreateInstanceBN(model, "IFCFACEOUTERBOUND");
+	    sdaiPutAttrBN(ifcFaceOuterBoundInstance, "Bound", sdaiINSTANCE, (void *) ifcPolyLoopInstance);
+        sdaiPutAttrBN(ifcFaceOuterBoundInstance, "Orientation", sdaiENUM, "T");
+
+	    ifcFaceInstance = sdaiCreateInstanceBN(model, "IFCFACE");
+	    aggrBounds = sdaiCreateAggrBN(ifcFaceInstance, "Bounds");
+	    sdaiAppend((int) aggrBounds, sdaiINSTANCE, (void *) ifcFaceOuterBoundInstance);
+
+	    sdaiAppend((int) aggrCfsFaces, sdaiINSTANCE, (void *) ifcFaceInstance);
+
+        // in the CDP our buildings don't support holes in buildings so we can skip the inner bound face
+		// if you want to add this feature have a look at buildShapeRepresentationInstance(shellStruct* pShell)
+    }
+
+	ifcFacetedBrepInstance = sdaiCreateInstanceBN(model, "IFCFACETEDBREP");
+	sdaiPutAttrBN(ifcFacetedBrepInstance, "Outer", sdaiINSTANCE, (void *) ifcClosedShellInstance);
+	
+    sdaiAppend((int) aggrItems, sdaiINSTANCE, (void*) ifcFacetedBrepInstance);
+
+	//}
+
+	return	ifcShapeRepresentationInstance;
+}
+
+int	IFCBuilder::buildCartesianPointInstance(Point3d point)
+{
+	return buildCartesianPointInstance(point.x, point.y, point.z);
+}
+
+
 
 void IFCBuilder::setHeader(char* ifcFileName)
 {
