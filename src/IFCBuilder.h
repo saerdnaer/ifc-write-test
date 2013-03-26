@@ -116,6 +116,8 @@ private:
 			ifcSiteInstance,
 			ifcSiteInstancePlacement,
 			ifcUnitAssignmentInstance;
+	
+transformationMatrixStruct matrix;
 
 	int ifcOpeningElementInstancePlacement;
     int ifcWallInstancePlacement;

@@ -69,7 +69,6 @@ IFCBuilder::IFCBuilder() {
 		return;
 	}
 
-	transformationMatrixStruct matrix;
 	identityMatrix(&matrix);
 
 	ifcApplicationInstance = 0;
@@ -107,8 +106,6 @@ IFCBuilder::IFCBuilder() {
 }
 
 void IFCBuilder::addBuilding(CDP_Building building) {
-	transformationMatrixStruct matrix;
-	identityMatrix(&matrix);
 
 	ifcBuildingInstance = buildBuildingInstance(&matrix, ifcSiteInstancePlacement, &ifcBuildingInstancePlacement);
 	buildRelAggregatesInstance("SiteContainer", "SiteContainer For Buildings", ifcSiteInstance, ifcBuildingInstance);
